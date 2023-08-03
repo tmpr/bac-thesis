@@ -1,18 +1,56 @@
 \documentclass{article}
+
+% -- Packages
 \usepackage[utf8]{inputenc}
+\usepackage{biblatex}
+\usepackage{hyperref}
+\usepackage{parskip}
+
+
+
+% -- Document Settings
+
+
 \title{Inferring a nucleotide substitution model by simulating mutation with AlphaFold2}
+\addbibresource{substitution-matrices.bib}
 
 \begin{document}
 \maketitle
+
 \begin{abstract}
     Sequence Alignment algorithms rely on some form of substitution matrix, which
     can heavily influence their results. For DNA sequences, BLAST, the most widely used sequence alignment tool,
     uses a matrix which rewards matches with a +2 and penalizes mismatches with a -3. In this thesis,
     we try to explain why such a simple substitution matrix was chosen, illuminate the problem in breadth
-    and derive and propose a new substitution matrix for DNA sequences.
+    and derive and propose a new substitution matrix for DNA sequences, potentially tailored to specific
+    protein families.
     \tableofcontents
 
 \end{abstract}
+
+
+
+\section{Notes \& preparation}
+\subsection{Previous work \& literature review}
+There has been previous work aiming to solve the same problem. \textcite{statesImprovedSensitivityNucleic1991}
+first a comparison of the default BLAST parameters and a specific model with transversion specific parameters -- however,
+their paper is not publicly available. \textcite{hamadaTrainingAlignmentParameters2017}, whilst focussing on different sequencing
+technologies, give a method for generating a substitution matrix for specific species and sequencing technologies using
+expected counts and a Markov model approach.  \textcite{jainImprovedDataAnalysis2015} use another EM approach to specifically
+find better alignment parameters for MinION sequencing technology. The above use simulated data for training and evaluation.
+\par
+Generally, the most notable thing is: for nucleotides, there seem to be only simulated test data (via synthetic evolution or synthetic mutation)
+-- there are no reliable non-synthetic, manually curated datasets. Simulated evolution, at least when done very naivley,
+can be perfectly reconstructed, however, it can not truly reflect evolution. A good overview of the current simulated datasets
+can also be found in section 5 of \cite{chaoDevelopmentsAlgorithmsSequence2022}.
+\par
+I also did a lot of research on AlphaFold. Most notably, it turns out that there are studies showing that AlphaFold2 can fold
+mutated protein sequences \cite{mcbrideAlphaFold2CanPredict2023} as well as studies claiming it cannot \cite{pakUsingAlphaFoldPredict2021,buelCanAlphaFold2Predict2022} -
+the former using a different metric of protein divergence.
+\par
+
+
+
 \section{Sequence Alignment \& Substitution Matrices}
 This section will introduce the context for the thesis at large: sequence alignment
 and substitution matrices. The reader is supposed to be versed in biology, however,
@@ -24,12 +62,12 @@ contributions without overburdening the reader.
 %
 %
 %
-\subsection{What is Sequence Alignment?}
+\subsection{What is Sequence Alignment? (2 pages)}
 (2 pages)
 Very shallow introduction
 %
 %
-\subsection{Why is Sequence Alignment useful?}
+\subsection{Why is Sequence Alignment useful? (4 pages)}
 (4 pages)
 This subsequence is supposed to give the reader an idea of the significance of sequence alignment
 in general, and also show (and/or cite) a few specific examples where sequence alignment
@@ -38,7 +76,7 @@ has had a positive effect on the world.
 %
 %
 %
-\subsection{How does Sequence Alignment work from a birdseye view?}
+\subsection{How does Sequence Alignment work from a birdseye view? (4 pages)}
 (4 pages)
 A description of the low-level workings of Sequence Alignment algorithms, specifically
 how scoring works, the dynamic programming algorithms, and BLAST. MSA and other algorithms will
@@ -46,19 +84,19 @@ be mentioned, but not fully explained.
 %
 %
 %
-\subsection{What is a Substitution Matrix?}
+\subsection{What is a Substitution Matrix? (2 pages)}
 Segway into substitution matrices, their Markovian nature, and discuss why nucleotide subsitution matrices,
 albeit smaller, pose a greater challenge than amino acid substituion matrices.
 %
 %
 %
-\subsection{What are the most important ways to derive substitution matrices for nucleotides?}
-(3 pages)
+\subsection{What are the most important ways to derive substitution matrices for nucleotides? (3 pages)}
+
 This subsection gives insight into established ways of deriving substitution matrices.
 %
 %
 %
-\section{A new nucleotide subsitution matrix}
+\section{A new nucleotide subsitution matrix (around 8 pages)}
 The goal of this section is to derive a new way of deriving a substitution matrix for
 nucleotides, while reiterating why this might be a good, or why it might be a bad idea.
 %
@@ -81,6 +119,8 @@ Giving a formal explanation of the new method.
 %
 %
 %
-\section{Experimentation and results}
+\section{Experimentation and results (5 pages)}
 Doing some experiments and explaining them. Preferrably, also some visualizations.
+
+\printbibliography
 \end{document}

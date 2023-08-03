@@ -1,0 +1,432 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.2 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global}
+    \entry{buelCanAlphaFold2Predict2022}{article}{}
+      \name{author}{2}{}{%
+        {{hash=466eb12cec8b726c459d3a9f36ce7abb}{%
+           family={Buel},
+           familyi={B\bibinitperiod},
+           given={Gwen\bibnamedelima R.},
+           giveni={G\bibinitperiod\bibinitdelim R\bibinitperiod}}}%
+        {{hash=822ebcf405db12805f1ad68e48b5a8f9}{%
+           family={Walters},
+           familyi={W\bibinitperiod},
+           given={Kylie\bibnamedelima J.},
+           giveni={K\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {Nature Publishing Group}%
+      }
+      \strng{namehash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \strng{fullhash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \strng{bibnamehash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \strng{authorbibnamehash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \strng{authornamehash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \strng{authorfullhash}{236c9b7ee5c418cc881c0bb0780abbc0}
+      \field{sortinit}{B}
+      \field{sortinithash}{d7095fff47cda75ca2589920aae98399}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{issn}{1545-9985}
+      \field{journaltitle}{Nature Structural \& Molecular Biology}
+      \field{langid}{english}
+      \field{month}{1}
+      \field{number}{1}
+      \field{title}{Can {{AlphaFold2}} Predict the Impact of Missense Mutations on Structure?}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{29}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \field{pages}{1\bibrangedash 2}
+      \range{pages}{2}
+      \verb{doi}
+      \verb 10.1038/s41594-021-00714-2
+      \endverb
+      \keyw{Molecular modelling,Protein folding}
+    \endentry
+    \entry{chaoDevelopmentsAlgorithmsSequence2022}{article}{}
+      \name{author}{3}{}{%
+        {{hash=dc679c3f71a72b38b4fa43285fd6cd09}{%
+           family={Chao},
+           familyi={C\bibinitperiod},
+           given={Jiannan},
+           giveni={J\bibinitperiod}}}%
+        {{hash=7820b347e85a8ee50093ddcc259ef390}{%
+           family={Tang},
+           familyi={T\bibinitperiod},
+           given={Furong},
+           giveni={F\bibinitperiod}}}%
+        {{hash=8988e4206730ffa0ecb54886c691cb99}{%
+           family={Xu},
+           familyi={X\bibinitperiod},
+           given={Lei},
+           giveni={L\bibinitperiod}}}%
+      }
+      \strng{namehash}{8d04791153817c507c546b175e3b8eee}
+      \strng{fullhash}{8d04791153817c507c546b175e3b8eee}
+      \strng{bibnamehash}{8d04791153817c507c546b175e3b8eee}
+      \strng{authorbibnamehash}{8d04791153817c507c546b175e3b8eee}
+      \strng{authornamehash}{8d04791153817c507c546b175e3b8eee}
+      \strng{authorfullhash}{8d04791153817c507c546b175e3b8eee}
+      \field{sortinit}{C}
+      \field{sortinithash}{4d103a86280481745c9c897c925753c0}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{shorttitle}
+      \field{abstract}{The continuous development of sequencing technologies has enabled researchers to obtain large amounts of biological sequence data, and this has resulted in increasing demands for software that can perform sequence alignment fast and accurately. A number of algorithms and tools for sequence alignment have been designed to meet the various needs of biologists. Here, the ideas that prevail in the research of sequence alignment and some quality estimation methods for multiple sequence alignment tools are summarized.}
+      \field{issn}{2218-273X}
+      \field{journaltitle}{Biomolecules}
+      \field{month}{4}
+      \field{number}{4}
+      \field{shorttitle}{Developments in {{Algorithms}} for {{Sequence Alignment}}}
+      \field{title}{Developments in {{Algorithms}} for {{Sequence Alignment}}: {{A Review}}}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{12}
+      \field{year}{2022}
+      \field{urldateera}{ce}
+      \field{pages}{546}
+      \range{pages}{1}
+      \verb{doi}
+      \verb 10.3390/biom12040546
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/Q4ENL6HL/Chao et al. - 2022 - Developments in Algorithms for Sequence Alignment.pdf
+      \endverb
+    \endentry
+    \entry{hamadaTrainingAlignmentParameters2017}{article}{}
+      \name{author}{4}{}{%
+        {{hash=15927edaaab5ca74f2d00b78eee1fb4d}{%
+           family={Hamada},
+           familyi={H\bibinitperiod},
+           given={Michiaki},
+           giveni={M\bibinitperiod}}}%
+        {{hash=7a322bd91654d2b0982c58b2687cb8ff}{%
+           family={Ono},
+           familyi={O\bibinitperiod},
+           given={Yukiteru},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=450eef9fcdd686d5464aec5d587282cd}{%
+           family={Asai},
+           familyi={A\bibinitperiod},
+           given={Kiyoshi},
+           giveni={K\bibinitperiod}}}%
+        {{hash=a69d776cc44b46d1ad60bc891d83c72e}{%
+           family={Frith},
+           familyi={F\bibinitperiod},
+           given={Martin\bibnamedelima C},
+           giveni={M\bibinitperiod\bibinitdelim C\bibinitperiod}}}%
+      }
+      \strng{namehash}{557138de261a6e2d85f4fa1e8c750622}
+      \strng{fullhash}{0dd6a6bc43d7a7b680365ccf8f7dc2a9}
+      \strng{bibnamehash}{557138de261a6e2d85f4fa1e8c750622}
+      \strng{authorbibnamehash}{557138de261a6e2d85f4fa1e8c750622}
+      \strng{authornamehash}{557138de261a6e2d85f4fa1e8c750622}
+      \strng{authorfullhash}{0dd6a6bc43d7a7b680365ccf8f7dc2a9}
+      \field{sortinit}{H}
+      \field{sortinithash}{23a3aa7c24e56cfa16945d55545109b5}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Summary LAST-TRAIN improves sequence alignment accuracy by inferring substitution and gap scores that fit the frequencies of substitutions, insertions, and deletions in a given dataset. We have applied it to mapping DNA reads from IonTorrent and PacBio RS, and we show that it reduces reference bias for Oxford Nanopore reads. Availability and Implementation the source code is freely available at http://last.cbrc.jp/ Supplementary information are available at Bioinformatics online.}
+      \field{issn}{1367-4803}
+      \field{journaltitle}{Bioinformatics}
+      \field{month}{3}
+      \field{number}{6}
+      \field{title}{Training Alignment Parameters for Arbitrary Sequencers with {{LAST-TRAIN}}}
+      \field{urlday}{14}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{33}
+      \field{year}{2017}
+      \field{urldateera}{ce}
+      \field{pages}{926\bibrangedash 928}
+      \range{pages}{3}
+      \verb{doi}
+      \verb 10.1093/bioinformatics/btw742
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/ZRJM8ELR/Hamada et al. - 2017 - Training alignment parameters for arbitrary sequen.pdf
+      \endverb
+    \endentry
+    \entry{jainImprovedDataAnalysis2015}{article}{}
+      \name{author}{6}{}{%
+        {{hash=159d8aa390073ceb49140894f36210c2}{%
+           family={Jain},
+           familyi={J\bibinitperiod},
+           given={Miten},
+           giveni={M\bibinitperiod}}}%
+        {{hash=91e732c587ef113f00047fe931de1364}{%
+           family={Fiddes},
+           familyi={F\bibinitperiod},
+           given={Ian},
+           giveni={I\bibinitperiod}}}%
+        {{hash=a268d072bbbe12aca3fcb51298c30a3b}{%
+           family={Miga},
+           familyi={M\bibinitperiod},
+           given={Karen\bibnamedelima H.},
+           giveni={K\bibinitperiod\bibinitdelim H\bibinitperiod}}}%
+        {{hash=31780da20c383953b80898138961d5a5}{%
+           family={Olsen},
+           familyi={O\bibinitperiod},
+           given={Hugh\bibnamedelima E.},
+           giveni={H\bibinitperiod\bibinitdelim E\bibinitperiod}}}%
+        {{hash=aa56b0e2f2e2486ac021b9e9acbb63a7}{%
+           family={Paten},
+           familyi={P\bibinitperiod},
+           given={Benedict},
+           giveni={B\bibinitperiod}}}%
+        {{hash=e1a2b41d20325f2eb1635b24418371d7}{%
+           family={Akeson},
+           familyi={A\bibinitperiod},
+           given={Mark},
+           giveni={M\bibinitperiod}}}%
+      }
+      \strng{namehash}{d2da91ae398f3d0c525d2ec0a67cd516}
+      \strng{fullhash}{0e81a8e8e0aa943b6ae8f710d015f588}
+      \strng{bibnamehash}{d2da91ae398f3d0c525d2ec0a67cd516}
+      \strng{authorbibnamehash}{d2da91ae398f3d0c525d2ec0a67cd516}
+      \strng{authornamehash}{d2da91ae398f3d0c525d2ec0a67cd516}
+      \strng{authorfullhash}{0e81a8e8e0aa943b6ae8f710d015f588}
+      \field{sortinit}{J}
+      \field{sortinithash}{b2f54a9081ace9966a7cb9413811edb4}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{The Oxford Nanopore MinION sequences individual DNA molecules using an array of pores that read nucleotide identities based on ionic current steps. We evaluated and optimized MinION performance using M13 genomic dsDNA. Using expectation-maximization (EM) we obtained robust maximum likelihood (ML) estimates for read insertion, deletion and substitution error rates (4.9\%, 7.8\%, and 5.1\% respectively). We found that 99\% of high-quality `2D' MinION reads mapped to reference at a mean identity of 85\%. We present a MinION-tailored tool for single nucleotide variant (SNV) detection that uses ML parameter estimates and marginalization over many possible read alignments to achieve precision and recall of up to 99\%. By pairing our high-confidence alignment strategy with long MinION reads, we resolved the copy number for a cancer/testis gene family (CT47) within an unresolved region of human chromosome Xq24.}
+      \field{issn}{1548-7091}
+      \field{journaltitle}{Nature methods}
+      \field{month}{4}
+      \field{number}{4}
+      \field{title}{Improved Data Analysis for the {{MinION}} Nanopore Sequencer}
+      \field{urlday}{24}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{12}
+      \field{year}{2015}
+      \field{urldateera}{ce}
+      \field{pages}{351\bibrangedash 356}
+      \range{pages}{6}
+      \verb{doi}
+      \verb 10.1038/nmeth.3290
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/489WKQLU/Jain et al. - 2015 - Improved data analysis for the MinION nanopore seq.pdf
+      \endverb
+    \endentry
+    \entry{mcbrideAlphaFold2CanPredict2023}{misc}{}
+      \name{author}{6}{}{%
+        {{hash=0f6275239314ebad72f5cddefe0d1337}{%
+           family={McBride},
+           familyi={M\bibinitperiod},
+           given={John\bibnamedelima M.},
+           giveni={J\bibinitperiod\bibinitdelim M\bibinitperiod}}}%
+        {{hash=ab77bcba9237d907857d6c043297cf93}{%
+           family={Polev},
+           familyi={P\bibinitperiod},
+           given={Konstantin},
+           giveni={K\bibinitperiod}}}%
+        {{hash=2be18cbd4b7d9ab5db068a9a28d9f4de}{%
+           family={Abdirasulov},
+           familyi={A\bibinitperiod},
+           given={Amirbek},
+           giveni={A\bibinitperiod}}}%
+        {{hash=995d55b164c76c68c0c19790836abe52}{%
+           family={Reinharz},
+           familyi={R\bibinitperiod},
+           given={Vladimir},
+           giveni={V\bibinitperiod}}}%
+        {{hash=c55b5530b194d13fc559ca93e25f6c60}{%
+           family={Grzybowski},
+           familyi={G\bibinitperiod},
+           given={Bartosz\bibnamedelima A.},
+           giveni={B\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=2dfea42bb5e270208d0081bfd8325f60}{%
+           family={Tlusty},
+           familyi={T\bibinitperiod},
+           given={Tsvi},
+           giveni={T\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {bioRxiv}%
+      }
+      \strng{namehash}{91d6ab09e0642512c37951a7770d3c54}
+      \strng{fullhash}{0569f55d7aa060049344217747c09252}
+      \strng{bibnamehash}{91d6ab09e0642512c37951a7770d3c54}
+      \strng{authorbibnamehash}{91d6ab09e0642512c37951a7770d3c54}
+      \strng{authornamehash}{91d6ab09e0642512c37951a7770d3c54}
+      \strng{authorfullhash}{0569f55d7aa060049344217747c09252}
+      \field{sortinit}{M}
+      \field{sortinithash}{4625c616857f13d17ce56f7d4f97d451}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{AlphaFold2 (AF) is a promising tool, but is it accurate enough to predict single mutation effects? Here, we report that the localized structural deformation between protein pairs differing by only 1-3 mutations –{} as measured by the effective strain –{} is correlated across 3,901 experimental and AF-predicted structures. Furthermore, analysis of {$\sim$} 11,000 proteins shows that the local structural change correlates with various phenotypic changes. These findings suggest that AF can predict the range and magnitude of single-mutation effects on average, and we propose a method to improve precision of AF predictions and to indicate when predictions are unreliable.}
+      \field{chapter}{New Results}
+      \field{eprintclass}{New Results}
+      \field{eprinttype}{bioRxiv}
+      \field{langid}{english}
+      \field{month}{6}
+      \field{title}{{{AlphaFold2}} Can Predict Single-Mutation Effects on Structure and Phenotype}
+      \field{urlday}{20}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{year}{2023}
+      \field{urldateera}{ce}
+      \field{pages}{2022.04.14.488301}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1101/2022.04.14.488301
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/VQ3RGJHL/McBride et al. - 2023 - AlphaFold2 can predict single-mutation effects on .pdf
+      \endverb
+    \endentry
+    \entry{pakUsingAlphaFoldPredict2021}{misc}{}
+      \name{author}{8}{}{%
+        {{hash=f84dcf570d24c20976f96b34d33b23c3}{%
+           family={Pak},
+           familyi={P\bibinitperiod},
+           given={Marina\bibnamedelima A.},
+           giveni={M\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=bdc8d9eb80605da2d388842f780c644d}{%
+           family={Markhieva},
+           familyi={M\bibinitperiod},
+           given={Karina\bibnamedelima A.},
+           giveni={K\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=7596c0833cfb14a17daa180646fd0e82}{%
+           family={Novikova},
+           familyi={N\bibinitperiod},
+           given={Mariia\bibnamedelima S.},
+           giveni={M\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=b85bad1ddee0ba7292900a0e28f9a0f0}{%
+           family={Petrov},
+           familyi={P\bibinitperiod},
+           given={Dmitry\bibnamedelima S.},
+           giveni={D\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=070a778c61709a02a928b3190382e63e}{%
+           family={Vorobyev},
+           familyi={V\bibinitperiod},
+           given={Ilya\bibnamedelima S.},
+           giveni={I\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=54e8da25652f046627b16fa26693783b}{%
+           family={Maksimova},
+           familyi={M\bibinitperiod},
+           given={Ekaterina\bibnamedelima S.},
+           giveni={E\bibinitperiod\bibinitdelim S\bibinitperiod}}}%
+        {{hash=305120c7765cb49471c9285388333567}{%
+           family={Kondrashov},
+           familyi={K\bibinitperiod},
+           given={Fyodor\bibnamedelima A.},
+           giveni={F\bibinitperiod\bibinitdelim A\bibinitperiod}}}%
+        {{hash=c94f7ba2653f6191c66ed6fc2a7c6db1}{%
+           family={Ivankov},
+           familyi={I\bibinitperiod},
+           given={Dmitry\bibnamedelima N.},
+           giveni={D\bibinitperiod\bibinitdelim N\bibinitperiod}}}%
+      }
+      \list{publisher}{1}{%
+        {bioRxiv}%
+      }
+      \strng{namehash}{b72b6e1e7e1d48134b48ec31ae202f9b}
+      \strng{fullhash}{4fdc2402ec567118c6b50672a4ec974a}
+      \strng{bibnamehash}{b72b6e1e7e1d48134b48ec31ae202f9b}
+      \strng{authorbibnamehash}{b72b6e1e7e1d48134b48ec31ae202f9b}
+      \strng{authornamehash}{b72b6e1e7e1d48134b48ec31ae202f9b}
+      \strng{authorfullhash}{4fdc2402ec567118c6b50672a4ec974a}
+      \field{sortinit}{P}
+      \field{sortinithash}{ff3bcf24f47321b42cb156c2cc8a8422}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{AlphaFold changed the field of structural biology by achieving three-dimensional (3D) structure prediction from protein sequence at experimental quality. The astounding success even led to claims that the protein folding problem is ``solved''. However, protein folding problem is more than just structure prediction from sequence. Presently, it is unknown if the AlphaFold-triggered revolution could help to solve other problems related to protein folding. Here we assay the ability of AlphaFold to predict the impact of single mutations on protein stability ({$\Delta\Delta$}G) and function. To study the question we extracted metrics from AlphaFold predictions before and after single mutation in a protein and correlated the predicted change with the experimentally known {$\Delta\Delta$}G values. Additionally, we correlated the AlphaFold predictions on the impact of a single mutation on structure with a large scale dataset of single mutations in GFP with the experimentally assayed levels of fluorescence. We found a very weak or no correlation between AlphaFold output metrics and change of protein stability or fluorescence. Our results imply that AlphaFold cannot be immediately applied to other problems or applications in protein folding.}
+      \field{chapter}{New Results}
+      \field{eprintclass}{New Results}
+      \field{eprinttype}{bioRxiv}
+      \field{langid}{english}
+      \field{month}{9}
+      \field{title}{Using {{AlphaFold}} to Predict the Impact of Single Mutations on Protein Stability and Function}
+      \field{urlday}{25}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{year}{2021}
+      \field{urldateera}{ce}
+      \field{pages}{2021.09.19.460937}
+      \range{pages}{-1}
+      \verb{doi}
+      \verb 10.1101/2021.09.19.460937
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/6EEZXGT4/Pak et al. - 2021 - Using AlphaFold to predict the impact of single mu.pdf
+      \endverb
+    \endentry
+    \entry{statesImprovedSensitivityNucleic1991}{article}{}
+      \name{author}{3}{}{%
+        {{hash=ce8a99a402cf87318b71dccce95c5faa}{%
+           family={States},
+           familyi={S\bibinitperiod},
+           given={David\bibnamedelima J.},
+           giveni={D\bibinitperiod\bibinitdelim J\bibinitperiod}}}%
+        {{hash=1c2560e77e0430d3a44f0f96961c9539}{%
+           family={Gish},
+           familyi={G\bibinitperiod},
+           given={Warren},
+           giveni={W\bibinitperiod}}}%
+        {{hash=b927ed90e6cf748b2b81e18cb1886f8c}{%
+           family={Altschul},
+           familyi={A\bibinitperiod},
+           given={Stephen\bibnamedelima F.},
+           giveni={S\bibinitperiod\bibinitdelim F\bibinitperiod}}}%
+      }
+      \strng{namehash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \strng{fullhash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \strng{bibnamehash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \strng{authorbibnamehash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \strng{authornamehash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \strng{authorfullhash}{43cfe5ceeddf6899e87d0b55005f5e1b}
+      \field{sortinit}{S}
+      \field{sortinithash}{b164b07b29984b41daf1e85279fbc5ab}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{abstract}{Scoring matrices for nucleic acid sequence comparison that are based on models appropriate to the analysis of molecular sequencing errors or biological mutation processes are presented. In mammalian genomes, transition mutations occur significantly more frequently than transversions, and the optimal scoring of sequence alignments based on this substitution model differs from that derived assuming a uniform mutation model. The information from sequence alignments potentially available using an optimal scoring system is compared with that obtained using the BLASTN default scoring. A modified BLAST database search tool allows these, or other explicitly specified scoring matrices, to be utilized in computationally efficient queries of nucleic acid databases with nucleic acid query sequences. Results of searches performed using BLASTN's default score matrix are compared with those using scores based on a mutational model in which transitions are more prevalent than transversions.}
+      \field{issn}{1046-2023}
+      \field{journaltitle}{Methods}
+      \field{langid}{english}
+      \field{month}{8}
+      \field{number}{1}
+      \field{title}{Improved Sensitivity of Nucleic Acid Database Searches Using Application-Specific Scoring Matrices}
+      \field{urlday}{18}
+      \field{urlmonth}{7}
+      \field{urlyear}{2023}
+      \field{volume}{3}
+      \field{year}{1991}
+      \field{urldateera}{ce}
+      \field{pages}{66\bibrangedash 70}
+      \range{pages}{5}
+      \verb{doi}
+      \verb 10.1016/S1046-2023(05)80165-3
+      \endverb
+      \verb{file}
+      \verb /Users/temper/Zotero/storage/J9CBESBU/S1046202305801653.html
+      \endverb
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+

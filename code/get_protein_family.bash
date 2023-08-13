@@ -8,8 +8,8 @@ JoinIntoGroupsOf() {
 
 protein_family_interpro_code="IPR045863"
 
-esearch -db protein -query IPR045863 | esummary | xtract -pattern DocumentSummary -element AccessionVersion >'IPR045863.accessions.txt'
+esearch -db protein -query IPR045863 | esummary | xtract -pattern DocumentSummary -element AccessionVersion >'data/accession/IPR045863'
 
-cat 'IPR045863.accessions.txt' | JoinIntoGroupsOf 5000 | xargs -n 1 sh -c \
+cat 'data/accession/IPR045863' | JoinIntoGroupsOf 5000 | xargs -n 1 sh -c \
     'efetch -email "alexandertemper27@gmail.com" -db protein -id $0 -format fasta_cds_na' | tqdm \
-    >IPR045863.fasta
+    >data/raw/IPR045863

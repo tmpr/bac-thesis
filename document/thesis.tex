@@ -5,122 +5,149 @@
 \usepackage{biblatex}
 \usepackage{hyperref}
 \usepackage{parskip}
+\usepackage{amsmath}
+\usepackage{amssymb}
 
 
+% -- Theorem environments
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
 
 % -- Document Settings
 
 
-\title{Inferring a nucleotide substitution model by simulating mutation with AlphaFold2}
+\title{Deriving BLOSUM-matrices for protein-coding DNA}
 \addbibresource{substitution-matrices.bib}
+\author{Alexander Temper}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
     Sequence Alignment algorithms rely on some form of substitution matrix, which
-    can heavily influence their results. For DNA sequences, BLAST, the most widely used sequence alignment tool,
-    uses a matrix which rewards matches with a +2 and penalizes mismatches with a -3. In this thesis,
-    we try to explain why such a simple substitution matrix was chosen, illuminate the problem in breadth
-    and derive and propose a new substitution matrix for DNA sequences, potentially tailored to specific
-    protein families.
-    \tableofcontents
-
+    can heavily influence their results. In this work, we try to derive a substitution matrix
+    for the genes (DNA) of a given protein family akin to the BLOSUMx matrices, which are used
+    for amino acid sequences.
 \end{abstract}
 
+\tableofcontents
 
 
-\section{Notes \& preparation}
-\subsection{Previous work \& literature review}
-There has been previous work aiming to solve the same problem. \textcite{statesImprovedSensitivityNucleic1991}
-first a comparison of the default BLAST parameters and a specific model with transversion specific parameters -- however,
-their paper is not publicly available. \textcite{hamadaTrainingAlignmentParameters2017}, whilst focussing on different sequencing
-technologies, give a method for generating a substitution matrix for specific species and sequencing technologies using
-expected counts and a Markov model approach.  \textcite{jainImprovedDataAnalysis2015} use another EM approach to specifically
-find better alignment parameters for MinION sequencing technology. The above use simulated data for training and evaluation.
+% \section{Notes \& preparation}
+% \subsection{Previous work \& literature review}
+% There has been previous work aiming to solve the same problem. \textcite{statesImprovedSensitivityNucleic1991}
+% first a comparison of the default BLAST parameters and a specific model with transversion specific parameters -- however,
+% their paper is not publicly available. \textcite{hamadaTrainingAlignmentParameters2017}, whilst focussing on different sequencing
+% technologies, give a method for generating a substitution matrix for specific species and sequencing technologies using
+% expected counts and a Markov model approach.  \textcite{jainImprovedDataAnalysis2015} use another EM approach to specifically
+% find better alignment parameters for MinION sequencing technology. The above use simulated data for training and evaluation.
+% \par
+% Generally, the most notable thing is: for nucleotides, there seem to be only simulated test data (via synthetic evolution or synthetic mutation)
+% -- there are no reliable non-synthetic, manually curated datasets. Simulated evolution, at least when done very naivley,
+% can be perfectly reconstructed, however, it can not truly reflect evolution. A good overview of the current simulated datasets
+% can also be found in section 5 of \cite{chaoDevelopmentsAlgorithmsSequence2022}.
+% \par
+% I also did a lot of research on AlphaFold. Most notably, it turns out that there are studies showing that AlphaFold2 can fold
+% mutated protein sequences \cite{mcbrideAlphaFold2CanPredict2023} as well as studies claiming it cannot \cite{pakUsingAlphaFoldPredict2021,buelCanAlphaFold2Predict2022} -
+% the former using a different metric of protein divergence.
 \par
-Generally, the most notable thing is: for nucleotides, there seem to be only simulated test data (via synthetic evolution or synthetic mutation)
--- there are no reliable non-synthetic, manually curated datasets. Simulated evolution, at least when done very naivley,
-can be perfectly reconstructed, however, it can not truly reflect evolution. A good overview of the current simulated datasets
-can also be found in section 5 of \cite{chaoDevelopmentsAlgorithmsSequence2022}.
-\par
-I also did a lot of research on AlphaFold. Most notably, it turns out that there are studies showing that AlphaFold2 can fold
-mutated protein sequences \cite{mcbrideAlphaFold2CanPredict2023} as well as studies claiming it cannot \cite{pakUsingAlphaFoldPredict2021,buelCanAlphaFold2Predict2022} -
-the former using a different metric of protein divergence.
-\par
 
 
 
-\section{Sequence Alignment \& Substitution Matrices}
-This section will introduce the context for the thesis at large: sequence alignment
-and substitution matrices. The reader is supposed to be versed in biology, however,
-the thesis aims to reintroduce the them to the topic again.
+\section{Introduction}
+Sequence alignment is the task of pairing up the elements of two (biological) sequences
+with the aim of finding conserved regions and homologous sequences which are anticipated to have some
+evolutionary relation. Sequence alignment algorithms are primarily used for constructing phylogenetic
+trees, searching for homologous sequences with BLAST, assembling full DNA strands from short reads,
+creating input features for AlphaFold2 and other.
 
-The chapter is supposed to be sufficiently in-depth to illustrate the significance of the
-contributions without overburdening the reader.
+% How formal should we introduce the problem.
+Most alignment algorithms try to maximize a so called \emph{scoring function}, which assigns to a given alignment some score.
+The classical methods score alignments by summing up scores assigned to each pair of letters in the given alignment.
+The scores for the pairs of letters can be represented by a symmetric matrix \- we call such matrices \emph{scoring matrices}.
+Next, we formally define our vocabulary. W.l.o.g., let us restrict ourselves to pairwise alignments, i.e., alignments of two sequences.
 
-%
-%
-%
-\subsection{What is Sequence Alignment? (2 pages)}
-(2 pages)
-Very shallow introduction
-%
-%
-\subsection{Why is Sequence Alignment useful? (4 pages)}
-(4 pages)
-This subsequence is supposed to give the reader an idea of the significance of sequence alignment
-in general, and also show (and/or cite) a few specific examples where sequence alignment
-has had a positive effect on the world.
+\begin{definition}
+    The following will be used throughout the paper:
+    \begin{itemize}
+        \item A \emph{sequence} $s$ is an ordered collection of letters from some alphabet of letters $\mathcal{L}$.
+        \item The letter '\texttt{-}' is called \emph{indel} and represents gaps in the alignment, which occur due to mutations or sequencing errors.
+        \item A (pairwise) \emph{sequence alignment} is a matrix
+              $\mathbf A \in (\mathcal{L} + \{\mathtt{-}\})^{2 \times m}$, where $m$ is the length of the alignment.
+              We symbolize the set of all alignments of alphabet $\mathcal L$ of length $m$
+        \item A scoring function $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{2 \times m} \to \mathbb{Z}$ maps an alignment to its score.
+    \end{itemize}
+\end{definition}
+Most algorithms of concern here use a scoring function of the form $\sigma(\mathbf A) = \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s: (\mathcal L + \{\mathtt{-}\})^2 \to \mathbf{Z}$ is a symmetric function
+evaluating pairs of letters, which can be represented by a matrix $\mathbf S \in \mathbb Z^{(\# \mathcal L) + 1 \times (\# \mathcal L) + 1}$. Said matrix is the focus of this work.
 
-%
-%
-%
-\subsection{How does Sequence Alignment work from a birdseye view? (4 pages)}
-(4 pages)
-A description of the low-level workings of Sequence Alignment algorithms, specifically
-how scoring works, the dynamic programming algorithms, and BLAST. MSA and other algorithms will
-be mentioned, but not fully explained.
-%
-%
-%
-\subsection{What is a Substitution Matrix? (2 pages)}
-Segway into substitution matrices, their Markovian nature, and discuss why nucleotide subsitution matrices,
-albeit smaller, pose a greater challenge than amino acid substituion matrices.
-%
-%
-%
-\subsection{What are the most important ways to derive substitution matrices for nucleotides? (3 pages)}
+\begin{example}
+    Since we are talking about DNA, our alphabet of concern will be the 4 different nucleotide bases, \{\texttt{A, C, G, T}\}. Two exemplary DNA sequences
+    are \texttt{ACA} and \texttt{AAGA}. An alignment between them is
+    \begin{equation*}
+        \mathbf A = \begin{bmatrix}
+            \mathtt{A} & \mathtt{C} & \mathtt{-} & \mathtt{A} \\
+            \mathtt{A} & \mathtt{A} & \mathtt{G} & \mathtt{A}
+        \end{bmatrix}
+    \end{equation*}
+    Indexes where the two nucleotides are equal are called \emph{matches}, where the two
+    are not equal are called \emph{mismatches} and where an indel is matched to a nucleotide
+    are called \emph{gaps}.
+    An exemplary scoring matrix might be
+    \begin{equation*}
+        \mathbf S = \begin{matrix}
+                       & \mathtt{A} & \mathtt{C} & \mathtt{G} & \mathtt{T} & \mathtt{-} \\
+            \mathtt{A} & 1          & -2         & -3         & 0          & 0          \\
+            \mathtt{C} & -2         & 0          & 0          & 0          & 0          \\
+            \mathtt{G} & -3         & 0          & 0          & 0          & -4         \\
+            \mathtt{T} & 0          & 0          & 0          & 0          & 0          \\
+            \mathtt{-} & 0          & 0          & -4         & 0          & 0          \\
+        \end{matrix}
+    \end{equation*}
+    Using the above matrix, \begin{equation*}
+        \sigma(\mathbf A) = s(\mathtt A, \mathtt A) + s(\mathtt C, \mathtt A) + s(\mathtt{-}, \mathtt{G}) + s(\mathtt{A}, \mathtt{A}) = 1 - 2 -4 + 1 = -6.
+    \end{equation*}
+\end{example}
+\section{Previous work}
 
-This subsection gives insight into established ways of deriving substitution matrices.
-%
-%
-%
-\section{A new nucleotide subsitution matrix (around 8 pages)}
-The goal of this section is to derive a new way of deriving a substitution matrix for
-nucleotides, while reiterating why this might be a good, or why it might be a bad idea.
-%
-%
-%
-\subsection{Context for the new method}
-This is pretty difficult to plan, as I am unsure what the new method will be.
-%
-%
-%
-\subsection{How do we know a substitution matrix is good? (Deriving some form of evaluation)}
-To claim that the new method is good, there needs to be some form of evaluation \- preferrably
-there are some established metrics for sequence alignment, or some benchmark datasets, however,
-if there are no such things, it is up to us to invent some form of metric.
-%
-%
-%
-\subsection{In-depth explanation of new method}
-Giving a formal explanation of the new method.
-%
-%
-%
-\section{Experimentation and results (5 pages)}
-Doing some experiments and explaining them. Preferrably, also some visualizations.
+Most notably, the two ubiquitous families of scoring matrices are the PAM matrices
+and the BLOSUM matrices. However, and this is also true for most other research around
+sequence alignment: there is a strong emphasis on studying the alignment of proteins over
+studying the alignment of DNA. To the best of our knowledge, nearly all benchmarks concern \emph{only protein alignments},
+which we suspect to to be one of the reasons that there is limited research focusing on DNA alignment. There have been attempts to create gold standards for RNA alignment,
+however, even there, investigations suggest an overrepresentation of tRNA, thus leading
+to a suboptimal benchmark.
+
+The literature for DNA scoring matrices derived from data is sparse. \textcite{hamadaTrainingAlignmentParameters2017}
+derive scoring matrices from specific organisms sequenced by specific sequencers. Further, as they claim,
+different genes in different organisms have significantly differing rates of mutation, which is why
+general-purpose DNA scoring matrices might be a bad idea. Their main focus lies on recovering and mitigating the sequencing errors
+and projecting the differing GC contents of different species in the resulting matrix. They evaluate their data on simulated data,
+which by definition makes some assumptions, thus is not too optimal. Their method performs slightly better than
+2 manually created scoring matrices.
+
+\section{BLOSUM}
+As a successor to the PAM matrices, \textcite{henikoffAminoAcidSubstitution1992} first constructed the BLOSUM matrices for protein alignments. A wonderful explanation thereof was written by \textcite{eddyWhereDidBLOSUM622004}, however, we shall dive into the theoretical underpinnings of BLOSUM here as well.
+
+Underlying BLOSUM is the equation that, given the two paired letters $a \in \mathcal L, b \in \mathcal L$,
+\begin{equation*}
+    s(a, b)= \lambda \log \frac{P(a, b)}{P(a)P(b)}.
+\end{equation*}
+Let us disect this:
+\begin{itemize}
+    \item $s(a, b)$ is the score of $a$ and $b$ being aligned.
+    \item Our two hypotheses are are that
+          \begin{enumerate}
+              \item $a$ and $b$ are related evolutionarily and ought to be aligned and
+              \item $a$ and $b$ are aligned due to random chance.
+          \end{enumerate}
+    \item We are interested in the odds of the 1 being true instead of 2
+          and encoding this into a score. Thus, we get the odds of their probability and scale them with a logarithm (as this makes the
+          odds symmetric around 0).
+    \item For numerical reasons, we would like the score to be an integer,
+          which is why we scale all all scores with $\lambda$.
+\end{itemize}
+
 
 \printbibliography
 \end{document}

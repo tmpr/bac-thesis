@@ -2344,23 +2344,15 @@
     <bcf:datasource type="file" datatype="bibtex" glob="false">substitution-matrices.bib</bcf:datasource>
   </bcf:bibdata>
   <bcf:section number="0">
-    <bcf:citekey order="1">statesImprovedSensitivityNucleic1991</bcf:citekey>
-    <bcf:citekey order="2">statesImprovedSensitivityNucleic1991</bcf:citekey>
-    <bcf:citekey order="3">hamadaTrainingAlignmentParameters2017</bcf:citekey>
-    <bcf:citekey order="4">hamadaTrainingAlignmentParameters2017</bcf:citekey>
-    <bcf:citekey order="5">jainImprovedDataAnalysis2015</bcf:citekey>
-    <bcf:citekey order="6">jainImprovedDataAnalysis2015</bcf:citekey>
-    <bcf:citekey order="7">chaoDevelopmentsAlgorithmsSequence2022</bcf:citekey>
-    <bcf:citekey order="8">mcbrideAlphaFold2CanPredict2023</bcf:citekey>
-    <bcf:citekey order="9">pakUsingAlphaFoldPredict2021</bcf:citekey>
-    <bcf:citekey order="9">buelCanAlphaFold2Predict2022</bcf:citekey>
-    <bcf:citekey order="10">statesImprovedSensitivityNucleic1991</bcf:citekey>
-    <bcf:citekey order="11">hamadaTrainingAlignmentParameters2017</bcf:citekey>
-    <bcf:citekey order="12">jainImprovedDataAnalysis2015</bcf:citekey>
-    <bcf:citekey order="13">chaoDevelopmentsAlgorithmsSequence2022</bcf:citekey>
-    <bcf:citekey order="14">mcbrideAlphaFold2CanPredict2023</bcf:citekey>
-    <bcf:citekey order="15">pakUsingAlphaFoldPredict2021</bcf:citekey>
-    <bcf:citekey order="16">buelCanAlphaFold2Predict2022</bcf:citekey>
+    <bcf:citekey order="1">hamadaTrainingAlignmentParameters2017</bcf:citekey>
+    <bcf:citekey order="2">hamadaTrainingAlignmentParameters2017</bcf:citekey>
+    <bcf:citekey order="3">henikoffAminoAcidSubstitution1992</bcf:citekey>
+    <bcf:citekey order="4">henikoffAminoAcidSubstitution1992</bcf:citekey>
+    <bcf:citekey order="5">eddyWhereDidBLOSUM622004</bcf:citekey>
+    <bcf:citekey order="6">eddyWhereDidBLOSUM622004</bcf:citekey>
+    <bcf:citekey order="7">hamadaTrainingAlignmentParameters2017</bcf:citekey>
+    <bcf:citekey order="8">henikoffAminoAcidSubstitution1992</bcf:citekey>
+    <bcf:citekey order="9">eddyWhereDidBLOSUM622004</bcf:citekey>
   </bcf:section>
   <!-- SORTING TEMPLATES -->
   <bcf:sortingtemplate name="nty">

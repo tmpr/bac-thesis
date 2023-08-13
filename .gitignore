@@ -1,2 +1,4 @@
 # Ignore all
 data
+
+**/__pycache__

@@ -10,4 +10,4 @@ dependencies:
   - pandas=2.0.3
   - nbformat=5.7.0
   - pip:
-    - pyfaidx
+    - biopython==1.81 

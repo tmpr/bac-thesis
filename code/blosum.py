@@ -2,7 +2,6 @@ from typing import Sequence
 
 import numpy as np
 from networkx import Graph, connected_components
-from sklearn.preprocessing import OneHotEncoder
 
 block = ["AGT", "AGG", "ACC", "AGA"]
 x = 0.62
@@ -16,7 +15,6 @@ ONE_HOT = {
 
 
 def compute_blosum_matrix(blocks: Sequence[str], x: float = 62):
-    enc = OneHotEncoder()
     pairwise_counts = []
     for block in blocks:
         if len(set(len(seq) for seq in block)) != 1:

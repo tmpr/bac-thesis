@@ -52,7 +52,7 @@ def compute_blosum_matrix(blocks: Sequence[str], x: float = 62):
             )
         )
 
-    pairwise_count = sum(pairwise_counts)
+    pairwise_count = np.sum(pairwise_counts, axis=0)
     count_sum = sum(
         pairwise_count[i, j] for i in range(4) for j in range(i + 1)
     )

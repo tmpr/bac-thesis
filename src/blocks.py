@@ -9,8 +9,6 @@ import numpy as np
 from Bio import SeqIO
 from numpy.typing import NDArray
 
-from blosum import compute_blosum_matrix
-
 msa_path = "/Users/temper/bac-hesis/data/IPR045863.fasta_1818"
 
 
@@ -53,11 +51,3 @@ def get_blocks(
     ]
     blocks = [alignment[:, start:end] for start, end in intervals]
     return blocks
-
-
-if __name__ == "__main__":
-    paths = list(Path("../data/aligned").glob("*IPR02*"))
-    blocks = []
-    for path in paths:
-        blocks.extend(get_blocks(path, min_column_density=0.75))
-    print(compute_blosum_matrix(blocks[:20]))

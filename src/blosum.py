@@ -3,6 +3,7 @@ from pathlib import Path
 from typing import Sequence
 
 import numpy as np
+import swalign
 from networkx import Graph, connected_components
 from numpy.typing import NDArray
 from tqdm import tqdm
@@ -153,13 +154,46 @@ def _compute_log_odds(Q, p):
     )
 
 
+def _matrix_to_ssw_format(m: NDArray[np.int16]):
+    return "\n".join(
+        [
+            "  A C G T",
+            f"A {m[0, 0]} {m[0, 1]} {m[0, 2]} {m[0, 3]}",
+            f"C {m[1, 0]} {m[1, 1]} {m[1, 2]} {m[1, 3]}",
+            f"G {m[2, 0]} {m[2, 1]} {m[2, 2]} {m[2, 3]}",
+            f"T {m[3, 0]} {m[3, 1]} {m[3, 2]} {m[3, 3]}",
+        ]
+    )
+
+
 if __name__ == "__main__":
     arg_parser = ArgumentParser()
     arg_parser.add_argument("protein_family_code", type=str)
+    arg_parser.add_argument(
+        "x",
+        type=float,
+        help="Float between 0 and 1 - sequences"
+        " with more or equal than x are being clustered",
+        default=0.62,
+    )
     args = arg_parser.parse_args()
     paths = list(Path("data/aligned/").glob(f"{args.protein_family_code}*"))
     blocks = []
     for path in paths:
-        blocks.extend(get_blocks(path, min_column_density=0.75))
+        blocks.extend(get_blocks(path, min_column_density=0.9))
 
-    print(compute_blosum_matrix(blocks))
+    matrix = compute_blosum_matrix(blocks, args.x)
+    text_matrix = _matrix_to_ssw_format(matrix)
+    matrix_name = f"BLOSUM{int(args.x*100)}_{args.protein_family_code}.matrix"
+    matrix_path = f"matrices/{matrix_name}"
+    Path(matrix_path).write_text(text_matrix)
+
+    print(f"Resulting matrix \n\n{text_matrix}\n")
+
+    for path in matrix_path, "matrices/blast.matrix", "matrices/tr_tv.matrix":
+        print(f"Using {path}")
+        scoring_matrix = swalign.ScoringMatrix(path)
+        sw = swalign.LocalAlignment(scoring_matrix)
+        alignment = sw.align("ACGTACGTACGT", "GGACAACGTAATATAG")
+        alignment.dump()
+        print("-----\n")

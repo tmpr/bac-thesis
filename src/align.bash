@@ -1,1 +1,1 @@
-ls -1 preprocessed | xargs -I {} kalign -f fasta -i preprocessed/{} -o {}
+ls -1 data/preprocessed | xargs -I {} kalign -f fasta -i data/preprocessed/{} -o data/aligned/{}

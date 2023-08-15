@@ -1,3 +1,5 @@
+from argparse import ArgumentParser
+from pathlib import Path
 from typing import Sequence
 
 import numpy as np
@@ -5,7 +7,7 @@ from networkx import Graph, connected_components
 from numpy.typing import NDArray
 from tqdm import tqdm
 
-x = 0.62
+from blocks import get_blocks
 
 # For simplicity, we handcode the one-hot encoding.
 ONE_HOT = {
@@ -100,12 +102,15 @@ def _cluster_block(block: NDArray[np.character], x: float) -> NDArray:
 def _compute_counting_table(
     clustered_block: NDArray[np.character],
 ) -> NDArray[np.int32]:
-    counting_table_assymmetric = sum(  # type: ignore
+    counting_table_assymmetric = np.sum(  # type: ignore
         # The outer prpoduct of the vectors computes
         # for each position the percentage of overlap # TODO
-        clustered_block[i].T @ clustered_block[j]
-        for i in list(range(len(clustered_block)))
-        for j in range(i)
+        [
+            clustered_block[i].T @ clustered_block[j]
+            for i in list(range(len(clustered_block)))
+            for j in range(i)
+        ],
+        axis=0,
     )
     counting_table = counting_table_assymmetric + counting_table_assymmetric.T
     counting_table[np.diag_indices_from(counting_table)] /= 2
@@ -146,3 +151,15 @@ def _compute_log_odds(Q, p):
             ]
         )
     )
+
+
+if __name__ == "__main__":
+    arg_parser = ArgumentParser()
+    arg_parser.add_argument("protein_family_code", type=str)
+    args = arg_parser.parse_args()
+    paths = list(Path("data/aligned/").glob(f"{args.protein_family_code}*"))
+    blocks = []
+    for path in paths:
+        blocks.extend(get_blocks(path, min_column_density=0.75))
+
+    print(compute_blosum_matrix(blocks))

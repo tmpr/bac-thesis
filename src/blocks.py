@@ -8,10 +8,10 @@ from typing import List, Tuple
 import numpy as np
 from Bio import SeqIO
 from numpy.typing import NDArray
-from tqdm import tqdm
+
+from blosum import compute_blosum_matrix
 
 msa_path = "/Users/temper/bac-hesis/data/IPR045863.fasta_1818"
-from blosum import compute_blosum_matrix
 
 
 def load_msa(path: Path) -> NDArray[np.generic]:
@@ -22,12 +22,12 @@ def load_msa(path: Path) -> NDArray[np.generic]:
 def get_dense_column_idxs(
     alignment: NDArray[np.generic], min_column_density: float
 ) -> List[int]:
-    lesser_sparsed_columns = [
+    dense_column_idx = [
         i
         for i, column in enumerate(alignment.T)
         if Counter(column)["-"] < len(column) * (1 - min_column_density)
     ]
-    return lesser_sparsed_columns
+    return dense_column_idx
 
 
 def get_contiguous_intervals(indices: List[int]) -> List[Tuple[int, int]]:
@@ -56,8 +56,8 @@ def get_blocks(
 
 
 if __name__ == "__main__":
-    paths = list(Path("../data/").glob("*IPR*"))
+    paths = list(Path("../data/aligned").glob("*IPR02*"))
     blocks = []
     for path in paths:
-        blocks.extend(get_blocks(path))
-    print(compute_blosum_matrix(blocks[:50]))
+        blocks.extend(get_blocks(path, min_column_density=0.75))
+    print(compute_blosum_matrix(blocks[:20]))

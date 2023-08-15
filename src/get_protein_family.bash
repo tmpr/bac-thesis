@@ -6,10 +6,13 @@ JoinIntoGroupsOf() {
         sed 's/ /,/g'
 }
 
-protein_family_interpro_code="IPR045863"
+protein_family_interpro_code=$1
+accession_file_name="data/accession/${protein_family_interpro_code}"
+raw_file_name="data/raw/${protein_family_interpro_code}"
 
-esearch -db protein -query IPR045863 | esummary | xtract -pattern DocumentSummary -element AccessionVersion >'data/accession/IPR045863'
+esearch -db protein -query $protein_family_interpro_code | esummary | xtract -pattern DocumentSummary -element AccessionVersion \
+    >$accession_file_name
 
-cat 'data/accession/IPR045863' | JoinIntoGroupsOf 5000 | xargs -n 1 sh -c \
+cat $accession_file_name | JoinIntoGroupsOf 5000 | xargs -n 1 sh -c \
     'efetch -email "alexandertemper27@gmail.com" -db protein -id $0 -format fasta_cds_na' | tqdm \
-    >data/raw/IPR045863
+    >$raw_file_name

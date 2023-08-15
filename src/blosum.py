@@ -1,4 +1,3 @@
-from multiprocessing import Pool
 from typing import Sequence
 
 import numpy as np
@@ -24,8 +23,11 @@ def compute_blosum_matrix(
     """Compute BLOSUMx matrix.
 
     Args:
-        blocks (Sequence[NDArray[np.character]]): Sequence of character matrices with the letters ACGT-.
-        x (float, optional): Float between 0 and 1 - sequences with more or equal than x are being clustered. Defaults to 0.62.
+        blocks (Sequence[NDArray[np.character]]):
+            Sequence of character matrices with the letters ACGT-.
+        x (float, optional):
+            Float between 0 and 1 - sequences with more or equal
+            than x are being clustered. Defaults to 0.62.
 
     Returns:
         NDArray[int]: BLOSUMx scoring matrix for nucleotides.

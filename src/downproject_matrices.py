@@ -1,7 +1,6 @@
 from pathlib import Path
 
 import numpy as np
-from numpy.linalg import norm
 from numpy.typing import NDArray
 import plotly.express as px
 from sklearn.decomposition import PCA

@@ -1,0 +1,10 @@
+# Ignore all
+data
+
+**/__pycache__
+matrices/
+document/
+!document/thesis.tex
+.DS_Store
+.vscode/
+blocks/

@@ -21,9 +21,7 @@ ONE_HOT = {
 }
 
 
-def compute_blosum_matrix(
-    blocks: Sequence[NDArray[np.character]], x: float = 0.62
-):
+def compute_blosum_matrix(blocks: Sequence[NDArray[np.character]], x: float = 0.62):
     """Compute BLOSUMx matrix.
 
     Args:
@@ -66,10 +64,7 @@ def compute_blosum_matrix(
 def _cluster_block(block: NDArray[np.character], x: float) -> NDArray:
     # (n sequences, n sequences)
     similarity_matrix = np.array(
-        [
-            [sum(seq_a == seq_b) / len(seq_a) for seq_a in block]
-            for seq_b in block
-        ]
+        [[sum(seq_a == seq_b) / len(seq_a) for seq_a in block] for seq_b in block]
     )
 
     # If A and B are similar and B and C are similar, A and C get
@@ -145,9 +140,7 @@ def _compute_log_odds(Q, p):
         np.array(
             [
                 [
-                    Q[i, j] / (p[i] ** 2)
-                    if i == j
-                    else Q[i, j] / (2 * p[i] * p[j])
+                    Q[i, j] / (p[i] ** 2) if i == j else Q[i, j] / (2 * p[i] * p[j])
                     for i in range(len(p))
                 ]
                 for j in range(len(p))
@@ -186,14 +179,14 @@ if __name__ == "__main__":
         blocks.extend(get_blocks(path, min_column_density=1, min_block_len=20))
 
     Path(f"blocks/{args.protein_family_code}").write_text(
-        "\n\n".join(
-            "\n".join("".join(row) for row in block) for block in blocks
-        )
+        "\n\n".join("\n".join("".join(row) for row in block) for block in blocks)
     )
 
     matrix = compute_blosum_matrix(blocks, args.x)
     text_matrix = _matrix_to_ssw_format(matrix)
-    matrix_name = f"BLOSUM{int(args.x*100)}_{args.protein_family_code}_{args.origin}.matrix"
+    matrix_name = (
+        f"BLOSUM{int(args.x*100)}_{args.protein_family_code}_{args.origin}.matrix"
+    )
     matrix_path = f"matrices/{matrix_name}"
     Path(matrix_path).write_text(text_matrix)
 

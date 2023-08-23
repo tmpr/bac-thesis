@@ -8,6 +8,8 @@ from sklearn.decomposition import PCA
 
 import plotly.io as pio
 
+# This is needed as otherwise, the plot ends up having a bug,
+# see https://github.com/plotly/plotly.py/issues/3469
 pio.kaleido.scope.mathjax = None
 
 
@@ -33,13 +35,14 @@ for path in paths:
 vectors = np.array([matrix.reshape(-1) for matrix in matrices])
 downprojected = PCA(n_components=2).fit_transform(vectors)
 
-sizes = [norm(vec) for vec in vectors]
+sizes = [15 for _ in vectors]
 fig = px.scatter(
     x=downprojected[:, 0],
     y=downprojected[:, 1],
     color=organisms,
     symbol=protein_families,
     size=sizes,
+    size_max=15
 )
 fig.update_layout(
     {"legend_title": "Organisms, Interpro code", "xaxis_title": "", "yaxis_title": ""}

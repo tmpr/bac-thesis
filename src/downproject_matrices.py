@@ -4,8 +4,12 @@ import numpy as np
 from numpy.linalg import norm
 from numpy.typing import NDArray
 import plotly.express as px
-import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+
+import plotly.io as pio
+
+pio.kaleido.scope.mathjax = None
+
 
 def parse_sw_matrix(txt: str) -> NDArray[np.int16]:
     rows = txt.splitlines()
@@ -30,5 +34,14 @@ vectors = np.array([matrix.reshape(-1) for matrix in matrices])
 downprojected = PCA(n_components=2).fit_transform(vectors)
 
 sizes = [norm(vec) for vec in vectors]
-fig = px.scatter(x=downprojected[:, 0], y=downprojected[:, 1], color=organisms, symbol=protein_families, size=sizes)
+fig = px.scatter(
+    x=downprojected[:, 0],
+    y=downprojected[:, 1],
+    color=organisms,
+    symbol=protein_families,
+    size=sizes,
+)
+fig.update_layout(
+    {"legend_title": "Organisms, Interpro code", "xaxis_title": "", "yaxis_title": ""}
+)
 fig.write_image("document/plots/downprojection.pdf")

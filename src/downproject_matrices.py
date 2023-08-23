@@ -52,22 +52,6 @@ fig.update_layout(
 )
 fig.write_image("document/plots/downprojection.pdf")
 
-
-def bmatrix(a):
-    """Returns a LaTeX bmatrix
-
-    :a: numpy array
-    :returns: LaTeX bmatrix as a string
-    """
-    if len(a.shape) > 2:
-        raise ValueError("bmatrix can at most display two dimensions")
-    lines = str(a).replace("[", "").replace("]", "").splitlines()
-    rv = [r"\begin{mbatrix}"]
-    rv += r"\\".join("  " + " & ".join(line.split()) for line in lines)
-    rv += [r"\end{matrix}"]
-    return f"${''.join(rv)}$"
-
-
 df = pd.DataFrame.from_records(
     list(
         zip(

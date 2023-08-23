@@ -4,13 +4,20 @@
 \usepackage[utf8]{inputenc} \usepackage{biblatex} \usepackage{hyperref}
 \usepackage{parskip} \usepackage{amsmath} \usepackage{amssymb}
 \usepackage{microtype}
+\usepackage{pdfpages}
+\usepackage{geometry}
 
 % -- Theorem environments
 \newtheorem{definition}{Definition} \newtheorem{example}{Example}
 
 % -- Document Settings
-
 \emergencystretch=1em
+\geometry{
+	a4paper,
+	total={170mm, 257mm},
+	left=20mm,
+	right=20mm
+}
 
 \title{Deriving BLOSUM-matrices for protein-coding DNA}
 \addbibresource{substitution-matrices.bib} \author{Alexander Temper}
@@ -201,6 +208,7 @@ BLOSUMx matrix. This is a somewhat
 substantial difference: the blocks in the original paper are \textbf{gapless},
 whereas the blocks in this paper \textbf{contain some gaps}.
 
+\includepdf{plots/downprojection.pdf}
 \printbibliography
 \end{document}
 

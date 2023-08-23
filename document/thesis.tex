@@ -1,107 +1,101 @@
 \documentclass{article}
 
 % -- Packages
-\usepackage[utf8]{inputenc}
-\usepackage{biblatex}
-\usepackage{hyperref}
-\usepackage{parskip}
-\usepackage{amsmath}
-\usepackage{amssymb}
-
+\usepackage[utf8]{inputenc} \usepackage{biblatex} \usepackage{hyperref}
+\usepackage{parskip} \usepackage{amsmath} \usepackage{amssymb}
+\usepackage{microtype}
 
 % -- Theorem environments
-\newtheorem{definition}{Definition}
-\newtheorem{example}{Example}
+\newtheorem{definition}{Definition} \newtheorem{example}{Example}
 
 % -- Document Settings
 
+\emergencystretch=1em
 
 \title{Deriving BLOSUM-matrices for protein-coding DNA}
-\addbibresource{substitution-matrices.bib}
-\author{Alexander Temper}
+\addbibresource{substitution-matrices.bib} \author{Alexander Temper}
 
 \begin{document}
 \maketitle
 
 \begin{abstract}
-    Sequence Alignment algorithms rely on some form of substitution matrix, which
-    can heavily influence their results. In this work, we try to derive a substitution matrix
-    for the genes (DNA) of a given protein family akin to the BLOSUMx matrices, which are used
-    for amino acid sequences.
+    Sequence Alignment algorithms rely on some form of substitution matrix,
+    which can heavily influence their results. In this work, we try to derive a
+    substitution matrix for the genes (DNA) of a given protein family akin to
+    the BLOSUMx matrices, which are used for amino acid sequences.
 \end{abstract}
 
 \tableofcontents
 
-
-% \section{Notes \& preparation}
-% \subsection{Previous work \& literature review}
-% There has been previous work aiming to solve the same problem. \textcite{statesImprovedSensitivityNucleic1991}
-% first a comparison of the default BLAST parameters and a specific model with transversion specific parameters -- however,
-% their paper is not publicly available. \textcite{hamadaTrainingAlignmentParameters2017}, whilst focussing on different sequencing
-% technologies, give a method for generating a substitution matrix for specific species and sequencing technologies using
-% expected counts and a Markov model approach.  \textcite{jainImprovedDataAnalysis2015} use another EM approach to specifically
-% find better alignment parameters for MinION sequencing technology. The above use simulated data for training and evaluation.
-% \par
-% Generally, the most notable thing is: for nucleotides, there seem to be only simulated test data (via synthetic evolution or synthetic mutation)
-% -- there are no reliable non-synthetic, manually curated datasets. Simulated evolution, at least when done very naivley,
-% can be perfectly reconstructed, however, it can not truly reflect evolution. A good overview of the current simulated datasets
-% can also be found in section 5 of \cite{chaoDevelopmentsAlgorithmsSequence2022}.
-% \par
-% I also did a lot of research on AlphaFold. Most notably, it turns out that there are studies showing that AlphaFold2 can fold
-% mutated protein sequences \cite{mcbrideAlphaFold2CanPredict2023} as well as studies claiming it cannot \cite{pakUsingAlphaFoldPredict2021,buelCanAlphaFold2Predict2022} -
-% the former using a different metric of protein divergence.
-\par
-
-
-
-\section{Introduction}
-Sequence alignment is the task of pairing up the elements of two (biological) sequences
-with the aim of finding conserved regions and homologous sequences which are anticipated to have some
-evolutionary relation. Sequence alignment algorithms are primarily used for constructing phylogenetic
-trees, searching for homologous sequences with BLAST, assembling full DNA strands from short reads,
-creating input features for AlphaFold2 and other.
-
+\section{Introduction} Test. Sequence alignment is the task of pairing up the
+elements of two (biological) sequences with the aim of finding conserved
+regions and homologous sequences which are anticipated to have some
+evolutionary relation. Sequence alignment algorithms are primarily used for
+constructing phylogenetic trees, searching for homologous sequences with BLAST,
+assembling full DNA strands from short reads, creating input features for
+AlphaFold2 and other.
 % How formal should we introduce the problem.
-Most alignment algorithms try to maximize a so called \emph{scoring function}, which assigns to a given alignment some score.
-The classical methods score alignments by summing up scores assigned to each pair of letters in the given alignment.
-The scores for the pairs of letters can be represented by a symmetric matrix \- we call such matrices \emph{scoring matrices}.
-Next, we formally define our vocabulary. W.l.o.g., let us restrict ourselves to pairwise alignments, i.e., alignments of two sequences.
+Most alignment algorithms try to maximize a so called \emph{scoring function},
+which assigns to a given alignment some score. The classical methods score
+alignments by summing up scores assigned to each pair of letters in the given
+alignment. The scores for the pairs of letters can be represented by a
+symmetric matrix \- we call such matrices \emph{scoring matrices}. Next, we
+formally define our vocabulary. W.l.o.g., let us restrict ourselves to pairwise
+alignments, i.e., alignments of two sequences.
 
 \begin{definition}
     The following will be used throughout the paper:
     \begin{itemize}
-        \item A \emph{sequence} $s$ is an ordered collection of letters from some alphabet of letters $\mathcal{L}$.
-        \item The letter '\texttt{-}' is called \emph{indel} and represents gaps in the alignment, which occur due to mutations or sequencing errors.
-        \item A (pairwise) \emph{sequence alignment} is a matrix
-              $\mathbf A \in (\mathcal{L} + \{\mathtt{-}\})^{2 \times m}$, where $m$ is the length of the alignment.
-              We symbolize the set of all alignments of alphabet $\mathcal L$ of length $m$
-        \item A scoring function $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{2 \times m} \to \mathbb{Z}$ maps an alignment to its score.
+        \item A \emph{sequence} $s$ is an ordered collection of letters from
+              some alphabet of letters $\mathcal{L}$.
+        \item The letter '\texttt{-}' is called \emph{indel} and represents
+              gaps in the alignment, which occur due to mutations or sequencing
+              errors.
+        \item A (pairwise) \emph{sequence alignment} is a matrix $\mathbf A \in
+                  (\mathcal{L} + \{\mathtt{-}\})^{2 \times m}$, where $m$ is the
+              length
+              of the alignment. We symbolize the set of all alignments of
+              alphabet $\mathcal L$ of length $m$
+        \item A scoring function $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{2
+                      \times m} \to \mathbb{Z}$ maps an alignment to its score.
     \end{itemize}
 \end{definition}
-Most algorithms of concern here use a scoring function of the form $\sigma(\mathbf A) = \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s: (\mathcal L + \{\mathtt{-}\})^2 \to \mathbf{Z}$ is a symmetric function
-evaluating pairs of letters, which can be represented by a matrix $\mathbf S \in \mathbb Z^{(\# \mathcal L) + 1 \times (\# \mathcal L) + 1}$. Said matrix is the focus of this work.
+Most algorithms of concern here use a scoring function of the form
+$\sigma(\mathbf A) = \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s:
+    (\mathcal L + \{\mathtt{-}\})^2 \to \mathbf{Z}$ is a symmetric function
+evaluating pairs of letters, which can be represented by a matrix $\mathbf S
+    \in \mathbb Z^{(\# \mathcal L) + 1 \times (\# \mathcal L) + 1}$. Said matrix is
+the focus of this work.
 
 \begin{example}
-    Since we are talking about DNA, our alphabet of concern will be the 4 different nucleotide bases, \{\texttt{A, C, G, T}\}. Two exemplary DNA sequences
-    are \texttt{ACA} and \texttt{AAGA}. An alignment between them is
+    Since we are talking about DNA, our alphabet of concern will be the 4
+    different nucleotide bases, \{\texttt{A, C, G, T}\}. Two exemplary DNA
+    sequences are \texttt{ACA} and \texttt{AAGA}. One possible alignment between them is
     \begin{equation*}
         \mathbf A = \begin{bmatrix}
             \mathtt{A} & \mathtt{C} & \mathtt{-} & \mathtt{A} \\
             \mathtt{A} & \mathtt{A} & \mathtt{G} & \mathtt{A}
         \end{bmatrix}
     \end{equation*}
-    Indexes where the two nucleotides are equal are called \emph{matches}, where the two
-    are not equal are called \emph{mismatches} and where an indel is matched to a nucleotide
-    are called \emph{gaps}.
-    An exemplary scoring matrix might be
+    Indexes where the two nucleotides are equal are called \emph{matches},
+    where the two
+    are not equal are called \emph{mismatches} and where an indel is matched to
+    a nucleotide are called \emph{gaps}. An exemplary scoring matrix might be
     \begin{equation*}
         \mathbf S = \begin{matrix}
-                       & \mathtt{A} & \mathtt{C} & \mathtt{G} & \mathtt{T} & \mathtt{-} \\
-            \mathtt{A} & 1          & -2         & -3         & 0          & 0          \\
-            \mathtt{C} & -2         & 0          & 0          & 0          & 0          \\
-            \mathtt{G} & -3         & 0          & 0          & 0          & -4         \\
-            \mathtt{T} & 0          & 0          & 0          & 0          & 0          \\
-            \mathtt{-} & 0          & 0          & -4         & 0          & 0          \\
+             & \mathtt{A} & \mathtt{C} & \mathtt{G} & \mathtt{T} &
+            \mathtt{-}                                             \\ \mathtt{A} & 1          & -2         & -3         & 0
+             &
+            0
+            \\ \mathtt{C} & -2         & 0          & 0          & 0
+             & 0
+            \\ \mathtt{G} & -3         & 0          & 0          & 0
+             & -4
+            \\ \mathtt{T} & 0          & 0          & 0          & 0
+             & 0
+            \\ \mathtt{-} & 0          & 0          & -4         & 0
+             & 0
+            \\
         \end{matrix}
     \end{equation*}
     Using the above matrix, \begin{equation*}
@@ -110,44 +104,103 @@ evaluating pairs of letters, which can be represented by a matrix $\mathbf S \in
 \end{example}
 \section{Previous work}
 
-Most notably, the two ubiquitous families of scoring matrices are the PAM matrices
-and the BLOSUM matrices. However, and this is also true for most other research around
-sequence alignment: there is a strong emphasis on studying the alignment of proteins over
-studying the alignment of DNA. To the best of our knowledge, nearly all benchmarks concern \emph{only protein alignments},
-which we suspect to to be one of the reasons that there is limited research focusing on DNA alignment. There have been attempts to create gold standards for RNA alignment,
-however, even there, investigations suggest an overrepresentation of tRNA, thus leading
-to a suboptimal benchmark.
+Most notably, the two families of classical scoring matrices are the PAM
+matrices and the BLOSUM matrices. However, and this is also true for most other
+research around sequence alignment: there is a strong emphasis on studying the
+alignment of proteins over studying the alignment of DNA. To the best of our
+knowledge, nearly all benchmarks concern \emph{only protein alignments}, which
+we suspect to to be one of the reasons that there is limited research focusing
+on DNA alignment. There have been attempts to create gold standards for RNA
+alignment,
+however, even there, investigations suggest an overrepresentation of tRNA, thus
+leading to a suboptimal benchmark.
 
-The literature for DNA scoring matrices derived from data is sparse. \textcite{hamadaTrainingAlignmentParameters2017}
-derive scoring matrices from specific organisms sequenced by specific sequencers. Further, as they claim,
-different genes in different organisms have significantly differing rates of mutation, which is why
-general-purpose DNA scoring matrices might be a bad idea. Their main focus lies on recovering and mitigating the sequencing errors
-and projecting the differing GC contents of different species in the resulting matrix. They evaluate their data on simulated data,
-which by definition makes some assumptions, thus is not too optimal. Their method performs slightly better than
-2 manually created scoring matrices.
+The literature for DNA scoring matrices derived from data is sparse.
+\textcite{hamadaTrainingAlignmentParameters2017} derive scoring matrices from
+specific organisms sequenced by specific sequencers. Further, as they claim,
+different genes in different organisms have significantly differing rates of
+mutation, which is why general-purpose DNA scoring matrices might be a bad
+idea. Their main focus lies on recovering and mitigating the sequencing errors
+and projecting the differing GC contents of different species in the resulting
+matrix. They evaluate their data on simulated data, which by definition makes
+some assumptions, thus is not too optimal. Their method performs slightly
+better than 2 manually created scoring matrices.
 
-\section{BLOSUM}
-As a successor to the PAM matrices, \textcite{henikoffAminoAcidSubstitution1992} first constructed the BLOSUM matrices for protein alignments. A wonderful explanation thereof was written by \textcite{eddyWhereDidBLOSUM622004}, however, we shall dive into the theoretical underpinnings of BLOSUM here as well.
+\section{BLOSUM} As a successor to the PAM matrices,
+\textcite{henikoffAminoAcidSubstitution1992} first constructed the BLOSUM
+matrices for protein alignments. A wonderful explanation thereof was written by
+\textcite{eddyWhereDidBLOSUM622004}, however, we shall briefly dive into the
+theoretical underpinnings of BLOSUM here as well.
 
-Underlying BLOSUM is the equation that, given the two paired letters $a \in \mathcal L, b \in \mathcal L$,
+Underlying BLOSUM is the equation that, given the two paired letters $a \in
+    \mathcal L, b \in \mathcal L$,
 \begin{equation*}
-    s(a, b)= \lambda \log \frac{P(a, b)}{P(a)P(b)}.
+    s(a, b)= \lambda \log_2 \frac{P(a, b)}{P(a)P(b)}.
 \end{equation*}
 Let us disect this:
 \begin{itemize}
     \item $s(a, b)$ is the score of $a$ and $b$ being aligned.
     \item Our two hypotheses are are that
           \begin{enumerate}
-              \item $a$ and $b$ are related evolutionarily and ought to be aligned and
+              \item $a$ and $b$ are related evolutionarily and ought to be
+                    aligned and
               \item $a$ and $b$ are aligned due to random chance.
           \end{enumerate}
-    \item We are interested in the odds of the 1 being true instead of 2
-          and encoding this into a score. Thus, we get the odds of their probability and scale them with a logarithm (as this makes the
-          odds symmetric around 0).
+    \item We are interested in the odds of the former being true over the
+          latter and encoding this into a score.
+    \item We can approximate this with already existing, aligned data. The
+          original paper used the so called Blocks matrix for this.
+    \item We can get approximate $P(a,b)$ by counting all the aligned pairs of
+          the already existing alignment and normalizing those counts to
+          probabilities. $P(a)$ can be computed analogously.
     \item For numerical reasons, we would like the score to be an integer,
-          which is why we scale all all scores with $\lambda$.
+          which is why we scale all all scores with $\lambda = 2$.
 \end{itemize}
+This family of matrices has become a de-facto standard for aligning amino acid
+sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
+matches are rewarded with +2 and mismatches are penalized with -3. It is this very assumed generality that has motivated this paper.
+Interestingly enough, there have been
+mistakes in the original computation of the BLOSUM matrices, which are claimed
+to have been improving them quietly. This, however, might be attributed to the
+fact that the benchmarks today might be influenced from the BLOSUM of the past.
 
+
+\section*{Experiments and results}
+\subsection*{Method}
+We constructed a fully automated pipeline which takes as input an identification code of a protein
+family on InterPro and the similarity threshold $x$ and computes the
+corresponding BLOSUMx matrix. The source code can be found online, yet, here we
+give some detail on the implementation and issues we faced.
+
+First, we search the NCBI protein database for the given identification code
+using eDirect. This yields only a subset of the desired genes, since not every
+protein in the database is annotated with all protein family codes. It is
+however, to the best of our knowledge, the fastest and most reliable way to
+download genes of a given protein family on InterPro. For the scope of this
+work, we deem this sufficient.
+
+Next, the downloaded genes are preprocessed. Genes which contain elements
+besides \texttt{ACGT} are removed. Then, the genes are being sorted into bins,
+depending on their length, the rationale thereof being that most multiple
+sequence alignments assume that the sequences are of similar length. Further,
+bins which have too few sequences in them are also being removed.
+
+Unfortunately, the PROTOMAT system originally used by Heinikoff is not to be
+found online any longer. Thus, we create our own blocks, which is clearly a
+major difference to the construction of the orgininal BLOSUM matrices.
+
+NOTE: BLAST should provide Web interface for Matrix.
+To do so, each bin is getting aligned by kalign (Use different software?) with
+its default settings. This results in an MSA for each bin.
+
+Thereafter, each MSA is looked at and columns which contain less than a certain
+percentage of gaps are selected. Then, from the `dense' columns, we find blocks
+of adjacent dense columns. These will be the blocks for the computation of the
+BLOSUMx matrix. This is a somewhat
+
+substantial difference: the blocks in the original paper are \textbf{gapless},
+whereas the blocks in this paper \textbf{contain some gaps}.
 
 \printbibliography
 \end{document}
+

@@ -1,15 +1,15 @@
 [0] Config.pm:307> INFO - This is Biber 2.17
 [0] Config.pm:310> INFO - Logfile is 'thesis.blg'
-[106] biber-darwin:340> INFO - === Sat Aug  5, 2023, 10:25:24
-[126] Biber.pm:418> INFO - Reading 'thesis.bcf'
-[269] Biber.pm:972> INFO - Found 3 citekeys in bib section 0
-[289] Biber.pm:4383> INFO - Processing section 0
-[303] Biber.pm:4574> INFO - Looking for bibtex file 'substitution-matrices.bib' for section 0
-[308] bibtex.pm:1713> INFO - LaTeX decoding ...
-[379] bibtex.pm:1518> INFO - Found BibTeX data source 'substitution-matrices.bib'
-[451] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
-[451] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
-[451] Biber.pm:4203> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
-[451] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
-[456] bbl.pm:654> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
-[459] bbl.pm:757> INFO - Output to thesis.bbl
+[87] biber-darwin:340> INFO - === Di Aug 22, 2023, 22:00:45
+[104] Biber.pm:418> INFO - Reading 'thesis.bcf'
+[222] Biber.pm:972> INFO - Found 3 citekeys in bib section 0
+[241] Biber.pm:4383> INFO - Processing section 0
+[253] Biber.pm:4574> INFO - Looking for bibtex file 'substitution-matrices.bib' for section 0
+[258] bibtex.pm:1713> INFO - LaTeX decoding ...
+[322] bibtex.pm:1518> INFO - Found BibTeX data source 'substitution-matrices.bib'
+[383] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'variable = shifted' with 'variable = non-ignorable'
+[383] UCollate.pm:68> INFO - Overriding locale 'en-US' defaults 'normalization = NFD' with 'normalization = prenormalized'
+[383] Biber.pm:4203> INFO - Sorting list 'nty/global//global/global' of type 'entry' with template 'nty' and locale 'en-US'
+[383] Biber.pm:4209> INFO - No sort tailoring available for locale 'en-US'
+[387] bbl.pm:654> INFO - Writing 'thesis.bbl' with encoding 'UTF-8'
+[390] bbl.pm:757> INFO - Output to thesis.bbl

@@ -11,9 +11,7 @@ def _filter_non_acgt(genes: List[SeqRecord]) -> List[SeqRecord]:
     return [gene for gene in genes if set(str(gene.seq)).issubset("ACGT")]
 
 
-def _bin_by_length(
-    genes: List[SeqRecord], bin_width: int
-) -> List[List[SeqRecord]]:
+def _bin_by_length(genes: List[SeqRecord], bin_width: int) -> List[List[SeqRecord]]:
     bins = defaultdict(list)
     for gene in genes:
         gene_length = len(gene.seq)

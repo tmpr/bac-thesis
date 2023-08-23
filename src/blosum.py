@@ -1,4 +1,5 @@
 from argparse import ArgumentParser
+
 from pathlib import Path
 from typing import Sequence
 
@@ -58,6 +59,7 @@ def compute_blosum_matrix(
     Q = _compute_Q(counting_table)
     P = _compute_p(Q)
     log_odds = _compute_log_odds(Q, P)
+    # print(f"{counting_table=}\n, {Q=}, {P=}, {log_odds=}")
     return np.round(log_odds)
 
 
@@ -84,7 +86,7 @@ def _cluster_block(block: NDArray[np.character], x: float) -> NDArray:
     components = list(connected_components(similarity_graph))
 
     if len(components) == 1:
-        print(f"Block contains only similar sequences. Skipping.")
+        print("Block contains only similar sequences. Skipping.")
         # Return two sequences with only zeros to maintain typical shape.
         empty_clustered_block = np.zeros((2, 1, 4))
         return empty_clustered_block
@@ -176,24 +178,31 @@ if __name__ == "__main__":
         " with more or equal than x are being clustered",
         default=0.62,
     )
+    arg_parser.add_argument("origin", type=str)
     args = arg_parser.parse_args()
     paths = list(Path("data/aligned/").glob(f"{args.protein_family_code}*"))
     blocks = []
     for path in paths:
-        blocks.extend(get_blocks(path, min_column_density=0.9))
+        blocks.extend(get_blocks(path, min_column_density=1, min_block_len=20))
+
+    Path(f"blocks/{args.protein_family_code}").write_text(
+        "\n\n".join(
+            "\n".join("".join(row) for row in block) for block in blocks
+        )
+    )
 
     matrix = compute_blosum_matrix(blocks, args.x)
     text_matrix = _matrix_to_ssw_format(matrix)
-    matrix_name = f"BLOSUM{int(args.x*100)}_{args.protein_family_code}.matrix"
+    matrix_name = f"BLOSUM{int(args.x*100)}_{args.protein_family_code}_{args.origin}.matrix"
     matrix_path = f"matrices/{matrix_name}"
     Path(matrix_path).write_text(text_matrix)
 
-    print(f"Resulting matrix \n\n{text_matrix}\n")
-
-    for path in matrix_path, "matrices/blast.matrix", "matrices/tr_tv.matrix":
-        print(f"Using {path}")
-        scoring_matrix = swalign.ScoringMatrix(path)
-        sw = swalign.LocalAlignment(scoring_matrix)
-        alignment = sw.align("ACGTACGTACGT", "GGACAACGTAATATAG")
-        alignment.dump()
-        print("-----\n")
+    # print(f"Resulting matrix \n\n{text_matrix}\n")
+    #
+    # for path in matrix_path, "matrices/blast.matrix", "matrices/tr_tv.matrix":
+    #     print(f"Using {path}")
+    #     scoring_matrix = swalign.ScoringMatrix(path)
+    #     sw = swalign.LocalAlignment(scoring_matrix)
+    #     alignment = sw.align("ACGTACGTACGT", "GGACAACGTAATATAG")
+    #     alignment.dump()
+    #     print("-----\n")

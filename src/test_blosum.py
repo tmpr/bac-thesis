@@ -77,9 +77,7 @@ def test_compute_counting_table(hochreiter_example):
 
 
 def test_compute_Q(hochreiter_example):
-    counting_table = _compute_counting_table(
-        _cluster_block(hochreiter_example, 0.75)
-    )
+    counting_table = _compute_counting_table(_cluster_block(hochreiter_example, 0.75))
     Q = _compute_Q(counting_table)
     expected = np.array(
         [
@@ -93,18 +91,14 @@ def test_compute_Q(hochreiter_example):
 
 
 def test_compute_p(hochreiter_example):
-    Q = _compute_Q(
-        _compute_counting_table(_cluster_block(hochreiter_example, 0.75))
-    )
+    Q = _compute_Q(_compute_counting_table(_cluster_block(hochreiter_example, 0.75)))
     p = _compute_p(Q)
     expected = np.array([0.3125, 0.375, 0.3125, 0.0])
     assert np.all(p == expected)
 
 
 def test_compute_log_odds(hochreiter_example):
-    Q = _compute_Q(
-        _compute_counting_table(_cluster_block(hochreiter_example, 0.75))
-    )
+    Q = _compute_Q(_compute_counting_table(_cluster_block(hochreiter_example, 0.75)))
     p = _compute_p(Q)
     # For stability reasons, we cut away the T entries.
     Q, p = Q[:3, :3], p[:3]

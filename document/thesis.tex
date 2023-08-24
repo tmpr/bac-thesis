@@ -14,11 +14,12 @@
 \usepackage{geometry}
 \usepackage{bookmark}
 \usepackage{multicol}
+\usepackage{mathtools}
 
 % -- Theorem environments
 \newtheorem{definition}{Definition}
 \newtheorem{example}{Example}
-
+\newtheorem{remark}{Remark}
 % -- Document Settings
 \emergencystretch=1em
 \title{Deriving BLOSUM-like matrices for protein-coding DNA}
@@ -52,9 +53,6 @@ alignments by summing up scores assigned to each pair of letters in the given
 alignment. The scores for the pairs of letters can be represented by a
 symmetric matrix --- we call such matrices "\emph{scoring matrices}".
 
-We formally define our vocabulary. W.l.o.g., we restrict ourselves to pairwise
-alignments, i.e., alignments of two sequences.
-
 \begin{definition}
     The following will be used throughout the paper:
     \begin{itemize}
@@ -65,16 +63,16 @@ alignments, i.e., alignments of two sequences.
               errors.
       \item A pairing of two nuleotides $a, b$ is called a "\emph{match}" if $a = b$, a "\emph{mistmatch"} if $a \ne b$ and a "\emph {gap}" if $a =$ "\texttt{-}" or $b =$ "\texttt{-}",
 
-        \item A (pairwise) \emph{sequence alignment} is a matrix $\mathbf A \in
-                  (\mathcal{L} + \{\mathtt{-}\})^{2 \times m}$, where $m$ is the
-              length
-              of the alignment.
+        \item A \emph{sequence alignment} is a matrix $\mathbf A \in
+                  (\mathcal{L} + \{\mathtt{-}\})^{n \times m}$, where $m$ is the
+              length of the alignment and $n$ is the number of aligned sequences.
+	      An alignment with $n = 2$ is called a \emph{pairwise sequence alignment.}
       \item A scoring function $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{2
                       \times m} \to \mathbb{Z}$ maps an alignment to its score.
     \end{itemize}
 \end{definition}
 
-Most algorithms of concern here use a scoring function of the form
+The typical algorithms for pairwise sequence alignment use a scoring function of the form
 $\sigma_s( \mathbf A )= \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s:
     (\mathcal L + \{\mathtt{-}\})^2 \to \mathbf{Z}$ is a symmetric function
 evaluating pairs of letters, which can be represented by a matrix $\mathbf S
@@ -139,7 +137,92 @@ individually and multiplying the two counts.
 The orgiginal BLOSUM matrices used the Blocks database
 \cite{henikoffAutomatedAssemblyProtein1991} which provided multiple sequence
 alignments (MSAs) without any gaps, from which $P(a, b)$ and $P(a)$ and $P(b)$
-were approximated from. Note here that this assumed
+were approximated from. Blocks are conserved regions of multiple sequence alignments without 
+gaps. Thus, the resulting scoring matrix does not include values for gaps. We now follow up with
+a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM matrices.
+
+\begin{definition}
+A Blocks database $\mathbf Z$ is a sequence of MSAs of differing shapes, i.e., $\mathbf Z = (\mathbf A^k)_{k=1}^l$ 
+	Let $\mathbf C \in \mathbb N^{4 \times 4}$ be a symmetric matrix
+which counts how often each nucleotide was aligned to another nucleotide in each column of each block.
+Let $\mathbf Q$ be the matrix of the relative frequencies of the observed pairs, i.e., 
+\begin{equation*}
+	 \mathbf Q_{i, j} = \mathbf C_{i, j} / \sum_i^4 \sum_j^i \mathbf C_{i, j}j
+\end{equation*}
+Further, we denote the relative frequencies of each nucleotide in $\mathbf Z$ as $\mathbf p$, and it can 
+be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i, j = 0}^4 \frac {\mathbf Q_{i, j}} {2}.
+\end{definition}
+\begin{example}
+	Let $\mathbf Z$ consist of two blocks:
+	\begin{equation*}
+		\begin{matrix}
+		\begin{matrix}
+			\texttt{AA} \\
+			\texttt{AC} \\
+			\texttt{AC} \\
+		\end{matrix} & 
+		\begin{matrix}
+			\texttt{AA} \\
+			\texttt{AC} \\
+			\texttt{AC} \\
+		\end{matrix}.
+	\end{matrix}
+	\end{equation*}
+	For the first block, we would have in the first column three pairs of \texttt{AA}, and in the second column two pairs of \textt{AC} and one pair of \textt{CC} 
+	The second block is identical, so the counts are thus identical. We thus get
+	\begin{equation*}
+		\mathbf C = \begin{bmatrix}
+			6 & 4 & 0 & 0 \\
+			4 & 2 & 0 & 0 \\
+			0 & 0 & 0 & 0 \\
+			0 & 0 & 0 & 0
+		\end{bmatrix}	
+	\end{equation*}
+	From this, we get
+	\begin{equation*}
+		\mathbf Q = \begin{bmatrix}
+			0.5 & 0.33 & 0 & 0 \\
+			0.33 & 0.16 & 0 & 0 \\
+			0 & 0 & 0 & 0 \\
+			0 & 0 & 0 & 0
+		\end{bmatrix}	
+	\end{equation*}
+	and
+	\begin{equation*}
+		\mathbf p = \begin{bmatrix}
+			0.66 & 0.33 & 0 & 0			
+		\end{bmatrix}	
+	\end{equation*}
+\end{example}
+
+Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the index of $b$,
+\begin{equation*}
+	s(a, b) \approx	2 \log_2 \begin{cases}
+		\frac{\mathbf Q_{i, j}}{2p_ip_j} & i \ne j, \\
+		\frac{\mathbf Q_{i, j}}{p_i^2} & i = j
+	\end{cases}
+\end{equation*}
+--- rounding these values to the nearest integer then gives us our scoring matrix $\mathbf S$.
+
+\begin{remark}
+	One rightfully might ask the question why the odds are put through a logarithm of base 2 and subsequently multiplied by 2. 
+	The logarithm of odds (called \emph{log-odds} are fairly standard in statistics --- odds are by definition positive, and "bad odds", i.e., those where the numerator is smaller than the denominator, span only $(0, 1)$, whereas good odds have a range of $[1, \infty)$. $\frac x y \ne -\frac y x$ but $\log \frac x y = - \log \frac y x $.
+
+	The reason for the $log_2$ and the multiplication of 2 is of heuristic, yet somewhat intuitive nature. Observe
+	that the decision boundary for rounding numbers is at $\frac 1 2$. If we let $x = \mathbf Q_{i, j}$ and $y = 2\mathbf p_i\mathbf p_j$, this means
+	\begin{equation*}
+		\mathbf S_{i, j} = k \implies k + \frac 1 2 \ge 2\log_2(\frac x y) \ge k - \frac 1 2 
+	\end{equation*}
+        implying	
+	\begin{align*}
+		k + \frac 1 2 \ge 2\log_2(\frac x y) &\ge k - \frac 1 2 &\iff
+		\\ 2k + 1 \ge \log_2(\frac x y) &= 2k - 1 &\iff
+		\\  2^{2k + 1} \ge \frac x y &\ge 2^{2k - 1}&\iff
+		\\  2^{2k +1}y \ge &\ge 2^{2k - 1}y.
+	\end{align*}
+	So, for example, we can say that if the value between \texttt{A} and \textt{C} is 2, then a pairing of the 
+	two was observed between 8 to 32 times as often as purely by chance. 
+\end{remark}
 
 This family of matrices has become a de-facto standard for aligning amino acid
 sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
@@ -213,7 +296,7 @@ whereas the blocks in this paper \textbf{contain some gaps}.
 
 \begin{figure}
 	\centering
-\includegraphics[scale=0.95]{plots/downprojection.pdf}
+\includegraphics[scale=0.9]{plots/downprojection.pdf}
 	\caption{Various nkBLOSUM matrices derived from the specific protein families for different subsets of species, projected to two dimensions using PCA. The protein family is indicated by symbol and the species indicated by color.}
 \end{figure}
 \include{plots/table.tex}

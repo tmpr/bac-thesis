@@ -3,8 +3,7 @@ data
 
 **/__pycache__
 matrices/
-document/
-!document/thesis.tex
+document/*!(.tex)
 .DS_Store
 .vscode/
 blocks/

@@ -34,7 +34,9 @@ for path in paths:
         blosumxs.append(blosumx)
         protein_families.append(protein_family)
         organisms.append(organism)
-        n_sequences = Path(f"data/raw/{protein_family}_{organism}.fasta").read_text().count(">")
+        n_sequences = (
+            Path(f"data/raw/{protein_family}_{organism}.fasta").read_text().count(">")
+        )
         n_sequencess.append(n_sequences)
 
 vectors = np.array([matrix.reshape(-1) for matrix in matrices])
@@ -77,5 +79,8 @@ df = df.round(decimals=2)
 df.to_latex("document/plots/table.tex", index=False, escape=False)
 
 nucs = list("ACGT")
-df = pd.concat([pd.DataFrame(m, columns=nucs, index=nucs) for m in matrices], keys=zip(organisms, protein_families))
+df = pd.concat(
+    [pd.DataFrame(m, columns=nucs, index=nucs) for m in matrices],
+    keys=zip(organisms, protein_families),
+)
 df.to_latex("document/plots/matrices.tex", multirow=True)

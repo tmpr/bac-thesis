@@ -189,13 +189,3 @@ if __name__ == "__main__":
     )
     matrix_path = f"matrices/{matrix_name}"
     Path(matrix_path).write_text(text_matrix)
-
-    # print(f"Resulting matrix \n\n{text_matrix}\n")
-    #
-    # for path in matrix_path, "matrices/blast.matrix", "matrices/tr_tv.matrix":
-    #     print(f"Using {path}")
-    #     scoring_matrix = swalign.ScoringMatrix(path)
-    #     sw = swalign.LocalAlignment(scoring_matrix)
-    #     alignment = sw.align("ACGTACGTACGT", "GGACAACGTAATATAG")
-    #     alignment.dump()
-    #     print("-----\n")

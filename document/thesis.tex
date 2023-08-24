@@ -207,35 +207,6 @@ Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the in
 \begin{remark}
 	One rightfully might ask the question why the odds are put through a logarithm of base 2 and subsequently multiplied by 2. 
 	The logarithm of odds (called \emph{log-odds} are fairly standard in statistics --- odds are by definition positive, and "bad odds", i.e., those where the numerator is smaller than the denominator, span only $(0, 1)$, whereas good odds have a range of $[1, \infty)$. $\frac x y \ne -\frac y x$ but $\log \frac x y = - \log \frac y x $.
-
-	% The reason for the $log_2$ and the multiplication of 2 is of heuristic, yet somewhat intuitive nature. Observe
-	% that the decision boundary for rounding numbers is at $\frac 1 2$. If we let $x = \mathbf Q_{i, j}$ and $y = 2\mathbf p_i\mathbf p_j$, this means
-	% \begin{equation*}
-	% 	\mathbf S_{i, j} = k \implies k + \frac 1 2 \ge 2\log_2(\frac x y) \ge k - \frac 1 2 
-	% \end{equation*}
-	%         implying	
-	% \begin{align*}
-	% 	k + \frac 1 2 \ge 2\log_2(\frac x y) &\ge k - \frac 1 2 &\iff
-	% 	\\ 2k + 1 \ge \log_2(\frac x y) &= 2k - 1 &\iff
-	% 	\\  2^{2k + 1} \ge \frac x y &\ge 2^{2k - 1}&\iff
-	% 	\\  2^{2k +1}y \ge &\ge 2^{2k - 1}y.
-	% \end{align*}
-	% So, for example, we can say that if the value between \texttt{A} and \textt{C} is 2, then a pairing of the 
-	% two was observed between 8 to 32 times as often as purely by chance. 
-	% The reason for the $log_2$ and the multiplication of 2 is of heuristic, yet somewhat intuitive nature. Observe
-	% 	that the decision boundary for rounding numbers is at $\frac 1 2$. If we let $x = \mathbf Q_{i, j}$ and $y = 2\mathbf p_i\mathbf p_j$, this means
-	% 	\begin{equation*}
-	% 		\mathbf S_{i, j} = k \implies k + \frac 1 2 \ge 2\log_2(\frac x y) \ge k - \frac 1 2 
-	% 	\end{equation*}
-	%         implying	
-	% 	\begin{align*}
-	% 		k + \frac 1 2 \ge 2\log_2(\frac x y) &\ge k - \frac 1 2 &\iff
-	% 		\\ 2k + 1 \ge \log_2(\frac x y) &= 2k - 1 &\iff
-	% 		\\  2^{2k + 1} \ge \frac x y &\ge 2^{2k - 1}&\iff
-	% 		\\  2^{2k +1}y \ge &\ge 2^{2k - 1}y.
-	% 	\end{align*}
-	% 	So, for example, we can say that if the value between \texttt{A} and \textt{C} is 2, then a pairing of the 
-	% 	two was observed between 8 to 32 times as often as purely by chance. 
 	\end{remark}
 
 This family of matrices has become a de-facto standard for aligning amino acid

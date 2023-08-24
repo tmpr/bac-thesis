@@ -24,7 +24,7 @@ def parse_sw_matrix(txt: str) -> NDArray[np.int16]:
 matrices = []
 paths = list(Path("matrices").glob("*.matrix"))
 paths = [path for path in paths if len(path.stem.split("_")) == 3]
-blosumxs, protein_families, organisms = [], [], []
+blosumxs, protein_families, organisms, n_sequencess = [], [], [], []
 for path in paths:
     if "nan" not in path.read_text():
         txt = path.read_text()
@@ -34,6 +34,8 @@ for path in paths:
         blosumxs.append(blosumx)
         protein_families.append(protein_family)
         organisms.append(organism)
+        n_sequences = Path(f"data/raw/{protein_family}_{organism}.fasta").read_text().count(">")
+        n_sequencess.append(n_sequences)
 
 vectors = np.array([matrix.reshape(-1) for matrix in matrices])
 downprojected = PCA(n_components=2).fit_transform(vectors)
@@ -57,6 +59,7 @@ df = pd.DataFrame.from_records(
         zip(
             organisms,
             protein_families,
+            n_sequencess,
             norm(vectors, axis=1),
             vectors.std(axis=1),
         )
@@ -64,10 +67,15 @@ df = pd.DataFrame.from_records(
     columns=[
         "Organisms",
         "Interpro code",
-        r"\sigma^2(\mathbf S)",
-        r"\lVert \mathbf S \rVert_2",
+        r"\# Sequences",
+        r"$\sigma^2(\mathbf S)$",
+        r"$\lVert \mathbf S \rVert_2$",
     ],
 )
-df = df.sort_values(by=r"\sigma^2(\mathbf S)")
+df = df.sort_values(by=r"$\sigma^2(\mathbf S)$")
 df = df.round(decimals=2)
-df.to_latex("document/plots/table.tex", bold_rows=True, escape=False)
+df.to_latex("document/plots/table.tex", index=False, escape=False)
+
+nucs = list("ACGT")
+df = pd.concat([pd.DataFrame(m, columns=nucs, index=nucs) for m in matrices], keys=zip(organisms, protein_families))
+df.to_latex("document/plots/matrices.tex", multirow=True)

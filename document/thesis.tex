@@ -38,7 +38,7 @@
 \end{abstract}
 
 \begin{multicols}{2}
-	
+
 \section*{Introduction} Sequence alignment is the task of pairing up the
 elements of two (biological) sequences with the aim of finding conserved
 regions and homologous sequences which are anticipated to have some
@@ -130,27 +130,27 @@ for aligning the two letters $a$ and $b$, $s(a,b)$. We can represent such
 a score by the odds of the probability of alignment being observed in nature, $P(a, b)$, over the probability of the two being paired due to chance $P(a \cup b) = P(a)P(b)$.
 
 Now, assuming we have a dataset with already aligned data we deem to be good, we
-can approximate $P(a, b)$ by counting how often $a, b$ were aligned, and we can 
-also approximate $P(a)*P(b)$ by counting how often both $a$ and $b$ appear 
+can approximate $P(a, b)$ by counting how often $a, b$ were aligned, and we can
+also approximate $P(a)*P(b)$ by counting how often both $a$ and $b$ appear
 individually and multiplying the two counts.
 
 The orgiginal BLOSUM matrices used the Blocks database
 \cite{henikoffAutomatedAssemblyProtein1991} which provided multiple sequence
 alignments (MSAs) without any gaps, from which $P(a, b)$ and $P(a)$ and $P(b)$
-were approximated from. Blocks are conserved regions of multiple sequence alignments without 
+were approximated from. Blocks are conserved regions of multiple sequence alignments without
 gaps. Thus, the resulting scoring matrix does not include values for gaps. We now follow up with
 a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM matrices.
 
 \begin{definition}
-A Blocks database $\mathbf Z$ is a sequence of MSAs of differing shapes, i.e., $\mathbf Z = (\mathbf A^k)_{k=1}^l$ 
+A Blocks database $\mathbf Z$ is a sequence of MSAs of differing shapes, i.e., $\mathbf Z = (\mathbf A^k)_{k=1}^l$
 	Let $\mathbf C \in \mathbb N^{4 \times 4}$ be a symmetric matrix
 which counts how often each nucleotide was aligned to another nucleotide in each column of each block.
-Let $\mathbf Q$ be the matrix of the relative frequencies of the observed pairs, i.e., 
+Let $\mathbf Q$ be the matrix of the relative frequencies of the observed pairs, i.e.,
 \begin{equation*}
 	 \mathbf Q_{i, j} = \mathbf C_{i, j} / \sum_i^4 \sum_j^i \mathbf C_{i, j}j
 \end{equation*}
-Further, we denote the relative frequencies of each nucleotide in $\mathbf Z$ as $\mathbf p$, and it can 
-be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i, j = 0}^4 \frac {\mathbf Q_{i, j}} {2}.
+Further, we denote the relative frequencies of each nucleotide in $\mathbf Z$ as $\mathbf p$, and it can
+be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i, j = 0}^4 \frac {\mathbf Q_{i, j}} {2}$.
 \end{definition}
 \begin{example}
 	Let $\mathbf Z$ consist of two blocks:
@@ -160,7 +160,7 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 			\texttt{AA} \\
 			\texttt{AC} \\
 			\texttt{AC} \\
-		\end{matrix} & 
+		\end{matrix} &
 		\begin{matrix}
 			\texttt{AA} \\
 			\texttt{AC} \\
@@ -168,7 +168,7 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 		\end{matrix}.
 	\end{matrix}
 	\end{equation*}
-	For the first block, we would have in the first column three pairs of \texttt{AA}, and in the second column two pairs of \textt{AC} and one pair of \textt{CC} 
+	For the first block, we would have in the first column three pairs of \texttt{AA}, and in the second column two pairs of \texttt{AC} and one pair of \texttt{CC}
 	The second block is identical, so the counts are thus identical. We thus get
 	\begin{equation*}
 		\mathbf C = \begin{bmatrix}
@@ -176,7 +176,7 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 			4 & 2 & 0 & 0 \\
 			0 & 0 & 0 & 0 \\
 			0 & 0 & 0 & 0
-		\end{bmatrix}	
+		\end{bmatrix}
 	\end{equation*}
 	From this, we get
 	\begin{equation*}
@@ -185,13 +185,13 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 			0.33 & 0.16 & 0 & 0 \\
 			0 & 0 & 0 & 0 \\
 			0 & 0 & 0 & 0
-		\end{bmatrix}	
+		\end{bmatrix}
 	\end{equation*}
 	and
 	\begin{equation*}
 		\mathbf p = \begin{bmatrix}
-			0.66 & 0.33 & 0 & 0			
-		\end{bmatrix}	
+			0.66 & 0.33 & 0 & 0
+		\end{bmatrix}
 	\end{equation*}
 \end{example}
 
@@ -205,19 +205,70 @@ Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the in
 --- rounding these values to the nearest integer then gives us our scoring matrix $\mathbf S$.
 
 \begin{remark}
-	One rightfully might ask the question why the odds are put through a logarithm of base 2 and subsequently multiplied by 2. 
+	One rightfully might ask the question why the odds are put through a logarithm of base 2 and subsequently multiplied by 2.
 	The logarithm of odds (called \emph{log-odds} are fairly standard in statistics --- odds are by definition positive, and "bad odds", i.e., those where the numerator is smaller than the denominator, span only $(0, 1)$, whereas good odds have a range of $[1, \infty)$. $\frac x y \ne -\frac y x$ but $\log \frac x y = - \log \frac y x $.
 	\end{remark}
+
+An important piece of the algorithm is still missing - the clustering of sequences within blocks.
+We will introduce this more informally: we pick a similarity threshold $x$, we
+then check within each block which sequences have $\ge x$\% identity and
+then 'average' the the sequences, transitively, i.e., if sequence $i$ and
+sequence $j$ are to be clustered and sequence $j$ and sequence $k$ as well,
+then sequence $i$, sequence $j$ and sequence $k$ are being clustered together.
+The count matrix $\mathbf C$ now includes fractional counts, and the rest of the computation remains the same.
+
+\begin{example}
+	Let
+	\begin{equation*}
+		\mathbf A = \begin{matrix}
+			\mathtt{AAC} \\
+			\mathtt{AGC} \\
+			\mathtt{AGG} \\
+			\mathtt{TTT}
+		\end{matrix}	
+	\end{equation*}
+	and $x = \frac 2 3$. Sequences $(1, 2)$ and $(2, 3)$ exceed the similarity threshold,
+	thus the clustered block will be
+	\begin{equation*}
+		c(\mathbf A) = \begin{matrix}
+		\mathtt{A}(\frac 2 3 \mathtt G \frac 1 3 \mathtt A)(\frac 2 3 \mathtt C \frac 1 3 \mathtt G) \\	
+		\mathtt{TTT}
+		\end{matrix} 	
+	\end{equation*}
+	The resulting count matrix 
+	\begin{equation*}
+			\mathbf C = \begin{bmatrix}
+			0 & 0 & 0 & \frac 4 3 \\
+			0 & 0 & 0 & \frac 2 3 \\
+			0 & 0 & 0 & 1 \\
+			\frac 4 3 & \frac 2 3 & 1 & 0
+		\end{bmatrix}.
+	\end{equation*}
+\end{example}
+This amounts to the basic machinery of the algorithm to compute BLOSUM matrices.
 
 This family of matrices has become a de-facto standard for aligning amino acid
 sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
 matches are rewarded with +2 and mismatches are penalized with -3. It is this very assumed generality that has motivated this paper.
+
+\begin{remark}
 Interestingly enough, there have been
 mistakes in the original computation of the BLOSUM matrices, which are claimed
 to have been improving them quietly. This, however, might be attributed to the
 fact that the benchmarks today might be influenced from the BLOSUM of the past.
-\subsubsection*{Related work}
 
+\end{remark}
+
+\begin{remark}
+	The reader might notice that there is some form of circular reasoning going on around
+	the computation of the BLOSUM matrices - good alignments are produced by using BLOSUM 
+	matrices and BLOSUM matrices are produced by good alignments. Indeed, the BLOCKS database
+	itself is created with BLOSUM matrices, and the two iteratively create the other.
+
+	First, the BLOCKS database is created from a scoring matrix with 0 mismatch score and 1 match score. Then, the first BLOSUM matrix is created, which is then used to produce new blocks. This process is then done another 2 times until the actual BLOSUM matrix and BLOCKS database have been produced.
+\end{remark}
+
+\subsubsection*{Related work}
 Most notably, the two families of classical scoring matrices are the PAM
 matrices and the BLOSUM matrices. However, and this is also true for most other
 research around sequence alignment: there is a strong emphasis on studying the

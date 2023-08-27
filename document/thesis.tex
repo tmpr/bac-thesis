@@ -26,8 +26,9 @@
 % -- Document Settings
 \emergencystretch=1em
 \title{Deriving BLOSUM-like matrices for protein-coding DNA}
-\geometry{a4paper, left=20mm, right=20mm, top=20mm, bottom=30mm}
+\geometry{a4paper, left=20mm, right=20mm, top=20mm, bottom=25mm}
 \addbibresource{substitution-matrices.bib}
+\bibliography{substitution-matrices}
 \twocolumn
 \author{Alexander Temper}
 
@@ -37,7 +38,7 @@
 \begin{abstract}
     Sequence Alignment algorithms rely on some form of scoring matrix,
     which can heavily influence their results. In this work, we try to derive
-    scoring matrices for the DNA of subsets of protein families akin to
+    scoring matrices for the deoxyribonucleic acid (DNA) of subsets of protein families akin to
     the BLOSUMx matrices, which are used for amino acid sequences.
 
     Whilst the lack of proper benchmark data allows for no definitve quantitative
@@ -48,11 +49,11 @@
 
 \section*{Introduction} Sequence alignment is the task of pairing up the
 elements of two (biological) sequences with the aim of finding conserved
-regions and homologous sequences which are anticipated to have some
+regions and homologous sequencese anticipated to have some
 evolutionary relation. Sequence alignment algorithms are primarily used for
-constructing phylogenetic trees cite, searching for homhologous sequences with BLAST cite,
-assembling full DNA strands from short reads cite, creating input features for
-AlphaFold2 cite
+constructing phylogenetic trees \cite{chatzouMultipleSequenceAlignment2016}, searching for homologous sequences with BLAST \cite{altschulBasicLocalAlignment1990},
+assembling full DNA strands from short reads, creating input features for
+machine learning algorithms like AlphaFold2 \cite{jumperHighlyAccurateProtein2021a} and others \cite{chatzouMultipleSequenceAlignment2016}
 
 Most alignment algorithms try to maximize a so called \emph{scoring function},
 which assigns to a given alignment some score. The classical methods score
@@ -66,22 +67,22 @@ symmetric matrix --- we call such matrices "\emph{scoring matrices}".
         \item A \emph{sequence} $s$ is an ordered collection of letters from
               an alphabet $\mathcal{L}$.
         \item The letter '\texttt{-}' is called \emph{indel} and represents
-              gaps in the alignment, which occur due to mutations or sequencing
+              gaps in the alignment, which typically occur due to mutations or sequencing
               errors.
-      \item A pairing of two nuleotides $a, b$ is called a "\emph{match}" if $a = b$, a "\emph{mistmatch"} if $a \ne b$ and a "\emph {gap}" if $a =$ "\texttt{-}" or $b =$ "\texttt{-}",
+      \item An alignment of two nuleotides $a, b$ is called a "\emph{match}" if $a = b$, a "\emph{mistmatch"} if $a \ne b$ and a "\emph {gap}" if $a =$ "\texttt{-}" or $b =$ "\texttt{-}",
 
         \item A \emph{sequence alignment} is a matrix $\mathbf A \in
-                  (\mathcal{L} + \{\mathtt{-}\})^{n \times m}$, where $m$ is the
-              length of the alignment and $n$ is the number of aligned sequences.
+                  (\mathcal{L} + \{\mathtt{-}\})^{n \times m}$, where $n$ is the number of aligned sequences and $m$ is the
+              length of the alignment.
 	      An alignment with $n = 2$ is called a \emph{pairwise sequence alignment.}
-      \item A \emph{scoring function} $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{2
-                      \times m} \to \mathbb{Z}$ maps an alignment to its score.
+      \item A \emph{scoring function} $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{n
+                      \times m} \to \mathbb{R}$ maps an alignment to its score.
     \end{itemize}
 \end{definition}
 
-The typical algorithms for pairwise sequence alignment use a scoring function of the form
+The classical algorithms for pairwise sequence alignment use a scoring function of the form
 $\sigma_s( \mathbf A )= \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s:
-    (\mathcal L + \{\mathtt{-}\})^2 \to \mathbf{Z}$ is a symmetric function
+    (\mathcal L + \{\mathtt{-}\})^2 \to \mathbb{R}$ is a symmetric function
 evaluating pairs of letters, which can be represented by a matrix $\mathbf S
     \in \mathbb Z^{(\# \mathcal L) + 1 \times (\# \mathcal L) + 1}$. Said matrix is
 the focus of this work.
@@ -106,7 +107,7 @@ the focus of this work.
             \\ \mathtt{C} & -2         & 0          & 0          & 0
              & 0
             \\ \mathtt{G} & -3         & 0          & 0          & 0
-             & -4
+             /& -4
             \\ \mathtt{T} & 0          & 0          & 0          & 0
              & 0
             \\ \mathtt{-} & 0          & 0          & -4         & 0
@@ -121,11 +122,11 @@ the focus of this work.
 \end{example}
 
 \subsubsection*{BLOSUM}
-Famously, one family of scoring matrices are the so called BLOSUM (\textbf{BLO}ck \textbf{SU}bstitution \textbf{M}atrices), first constructed by \textcite{henikoffAminoAcidSubstitution1992} for aligning amino acid sequences. A wonderful explanation thereof was written by
+Famously, one family of scoring matrices are the so called BLOSUMs (\textbf{BLO}ck \textbf{SU}bstitution \textbf{M}atrices), first constructed by \textcite{henikoffAminoAcidSubstitution1992} for aligning amino acid sequences. A wonderful explanation thereof was written by
 \textcite{eddyWhereDidBLOSUM622004}, however, we shall briefly dive into the
-theoretical underpinnings of BLOSUM here as well.
+theoretical underpinnings of BLOSUMs here as well.
 
-Underlying BLOSUM is the equation that, given the two paired letters $a \in
+Underlying BLOSUMs is the equation that, given the two paired letters $a \in
     \mathcal L, b \in \mathcal L$,
 \begin{equation*}
     s(a, b)= 2 \log_2 \frac{P(a, b)}{P(a)P(b)}.
@@ -133,26 +134,26 @@ Underlying BLOSUM is the equation that, given the two paired letters $a \in
 
 We can understand this as follows: We want to derive a score we assign
 for aligning the two letters $a$ and $b$, $s(a,b)$. We can represent such
-a score by the odds of the probability of alignment being observed in nature,
-$P(a, b)$ versus the probability of the two being paired due to chance, which is
-in probablistic terms $P(a \cup b) = P(a)P(b)$.
+a score by the odds of the probability of aligning $a, b$ being observed,
+$P(a, b)$, versus the probability of the two being paired due to chance, which is
+, in probablistic terms, $P(a \cup b) = P(a)P(b)$.
 
 Now, assuming we have a dataset with already aligned data we deem to be good, we
 can approximate $P(a, b)$ by counting how often $a$ and $b$ were aligned, and
 we can also approximate $P(a)*P(b)$ by counting how often both $a$ and $b$ appear
-individually and multiplying the two counts together.
+individually and multiplying the resulting two counts together.
 
-The orgiginal BLOSUM matrices used the BLOCKS database
+The orgiginal BLOSUM used the BLOCKS database
 \cite{henikoffAutomatedAssemblyProtein1991}, which provided multiple sequence
 alignments (MSAs) without any gaps, called BLOCKS, from which $P(a, b)$ and $P(a)$ and $P(b)$
-were approximated from. BLOCKS are conserved regions of multiple sequence alignments without
+were approximated. BLOCKS are conserved regions of multiple sequence alignments without
 gaps. Thus, the resulting scoring matrix does not include values for gaps. We now follow up with
-a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM matrices.
+a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM .
 
 \begin{definition}
 A BLOCKS database $\mathbf Z$ is a sequence of MSAs of differing shapes, i.e., $\mathbf Z = (\mathbf A^k)_{k=1}^l$
 	Let $\mathbf C \in \mathbb N^{4 \times 4}$ be a symmetric matrix
-which counts how often each nucleotide was aligned to another nucleotide in each column of each BLOCK.
+with counts of how often each nucleotide was aligned to another nucleotide in each column of each BLOCK.
 Let $\mathbf Q$ be the matrix of the relative frequencies of the observed pairs, i.e.,
 \begin{equation*}
 	 \mathbf Q_{i, j} = \mathbf C_{i, j} / \sum_i^4 \sum_j^i \mathbf C_{i, j}j
@@ -176,17 +177,17 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 		\end{matrix}.
 	\end{matrix}
 	\end{equation*}
-	For the first , we would have in the first column three pairs of \texttt{AA}, and in the second column two pairs of \texttt{AC} and one pair of \texttt{CC}
-	The second  is identical, so the counts are thus identical. We thus get
+	For the first block in the first column, we have three pairs of \texttt{AA}, and in the second column we have two pairs of \texttt{AC} and one pair of \texttt{CC}
+	The second  is identical, so the counts are identical. Assuming the indexes $\mathtt A = 1, \mathtt C = 2, \mathtt G = 3, \mathtt T = 4$, we get
 	\begin{equation*}
 		\mathbf C = \begin{bmatrix}
 			6 & 4 & 0 & 0 \\
 			4 & 2 & 0 & 0 \\
 			0 & 0 & 0 & 0 \\
 			0 & 0 & 0 & 0
-		\end{bmatrix}
+		\end{bmatrix}.
 	\end{equation*}
-	From this, we get
+	From the above, we get
 	\begin{equation*}
 		\mathbf Q = \begin{bmatrix}
 			0.5 & 0.33 & 0 & 0 \\
@@ -199,7 +200,7 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 	\begin{equation*}
 		\mathbf p = \begin{bmatrix}
 			0.66 & 0.33 & 0 & 0
-		\end{bmatrix}
+		\end{bmatrix}.
 	\end{equation*}
 \end{example}
 
@@ -213,9 +214,16 @@ Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the in
 --- rounding these values to the nearest integer then gives us our scoring matrix $\mathbf S$.
 
 \begin{remark}
-	One rightfully might ask the question why the odds are put through a logarithm of base 2 and subsequently multiplied by 2.
-	The logarithm of odds (called \emph{log-odds} are fairly standard in statistics --- odds are by definition positive, and "bad odds", i.e., those where the numerator is smaller than the denominator, span only $(0, 1)$, whereas good odds have a range of $[1, \infty)$. $\frac x y \ne -\frac y x$ but $\log \frac x y = - \log \frac y x $.
-	\end{remark}
+	One might rightfully ask why we apply a binary logarithm and a doubling to the odds.
+	The logarithm of odds, called \emph{log-odds}, are fairly standard in
+	statistics --- odds are by definition positive, and opposing odds, i.e.,
+	those where the $\frac a b < 1$, span only
+	$(0, 1)$, whereas good odds have a range of $[1, \infty)$. Applying a logarithm counteracts
+	this by making the function skew symmetric, i.e., $\frac a b 
+	\ne -\frac b a$ but $\log \frac a b = - \log \frac b a $.
+	
+	TODO: Why the times two?
+\end{remark}
 
 An important piece of the algorithm is still missing - the clustering of sequences within BLOCKS.
 We will introduce this more informally: we pick a similarity threshold $x$, we
@@ -224,6 +232,8 @@ then 'average' the the sequences, transitively, i.e., if sequence $i$ and
 sequence $j$ are to be clustered and sequence $j$ and sequence $k$ as well,
 then sequence $i$, sequence $j$ and sequence $k$ are being clustered together.
 The count matrix $\mathbf C$ now includes fractional counts, and the rest of the computation remains the same.
+This is why the matrices are called BLOSUMx matrices --- a BLOSUM90 matrix is made from blocks where sequences 
+of 90\% similarity are clustered.
 
 \begin{example}
 	Let
@@ -253,40 +263,40 @@ The count matrix $\mathbf C$ now includes fractional counts, and the rest of the
 		\end{bmatrix}.
 	\end{equation*}
 \end{example}
-This amounts to the basic machinery of the algorithm to compute BLOSUM matrices.
+This amounts to the basic machinery of the algorithm to compute BLOSUMs.
 
-This family of matrices has become a de-facto standard for aligning amino acid
+This family of matrices has become a de-facto standard fo:qr aligning amino acid
 sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
-matches are rewarded with +2 and mismatches are penalized with -3. It is this very assumed generality that has motivated this paper.
+matches are rewarded with +2 and mismatches are penalized with -3 \cite{altschulBasicLocalAlignment1990}
+very assumed generality that has motivated this paper.
 
 \begin{remark}
 Interestingly enough, there have been
-mistakes in the original computation of the BLOSUM matrices, which are claimed
-to have been improving them quietly. This, however, might be attributed to the
-fact that the benchmarks today might be influenced from the BLOSUM of the past.
+mistakes in the original computation of the BLOSUMs, which are claimed
+to have been improving them quietly \cite{styczynskiBLOSUM62MiscalculationsImprove2008a}, however, might be attributed to the
+fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 
 \end{remark}
 
 \begin{remark}\label{emref}
 	The reader might notice that there is some form of circular reasoning going on around
-	the computation of the BLOSUM matrices - good alignments are produced by using BLOSUM 
-	matrices and BLOSUM matrices are produced by good alignments. Indeed, the BLOCKS database
-	itself is created with BLOSUM matrices, and the two iteratively create the other.
+	the computation of the BLOSUMs - good alignments are produced by using BLOSUMs 
+	and BLOSUMs are produced by good alignments. Indeed, the BLOCKS database
+	itself is created with BLOSUMs, and the two iteratively create the other.
 
-	First, the BLOCKS database is created from a scoring matrix with 0 mismatch score and 1 match score. Then, the first BLOSUM matrix is created, which is then used to produce new BLOCKS. This process is then done another 2 times until the actual BLOSUM matrix and BLOCKS database have been produced.
+	First, the BLOCKS database is created from a scoring matrix with 0 mismatch score and 1 match score. Then, the first BLOSUM is created, which is then used to produce new BLOCKS. This process is then done another 2 times until the actual BLOSUM and BLOCKS database have been produced.
 \end{remark}
 
 \subsubsection*{Related work}
-Most notably, the two families of classical scoring matrices are the PAM
-matrices and the BLOSUM matrices. However, and this is also true for most other
-research around sequence alignment: there is a strong emphasis on studying the
+Most notably, the two families of classical scoring matrices are the PAM matrixes \cite{dayhoffModelEvolutionaryChange1978} and the BLOSUMs. 
+However, and this is also true for most other research around sequence alignment: there is a strong emphasis on studying the
 alignment of proteins over studying the alignment of DNA. To the best of our
-knowledge, nearly all benchmarks concern \emph{only amino acid alignments}, which
+knowledge, nearly all benchmarks concern amino acid alignments \cite{gardnerBenchmarkMultipleSequence2005, pervezEvaluatingAccuracyEfficiency2014, thompsonBAliBASELatestDevelopments2005, vanwalleSABmarkBenchmarkSequence2005a}, which
 we suspect to to be one of the reasons that there is limited research focusing
 on DNA alignment. There have been attempts to create gold standards for RNA
-alignment,
+alignment \cite{wilmEnhancedRNAAlignment2006},
 however, even there, investigations suggest an overrepresentation of tRNA, thus
-leading to a suboptimal benchmark.
+leading to a suboptimal benchmark \cite{lowesBRaliBaseDentTale2017}
 
 The literature for DNA scoring matrices derived from data is sparse.
 \textcite{hamadaTrainingAlignmentParameters2017} derive scoring matrices from
@@ -297,14 +307,15 @@ idea. Their main focus lies on recovering and mitigating the sequencing errors
 and projecting the differing GC contents of different species in the resulting
 matrix. They evaluate their data on simulated data, which consequentually makes
 strong assumptions, thus is not too optimal. Their method performs slightly
-better than 2 manually created scoring matrices.
+better than 2 manually created scoring matrices, which we deem to be insufficient evidence
+to support any substantial claims.
 
 
 \section*{Experiments and results}
 \subsection*{Method}
 We constructed a fully automated pipeline which takes as input an identification code of a protein
 family on InterPro and the similarity threshold $x$ and computes the
-corresponding BLOSUMx matrix. The source code can be found online, yet, here we
+corresponding nBLOSUMx (nucleotide BLOSUMx). The source code can be found online, yet, here we
 give some detail on the implementation and issues we faced.
 
 First, we search the \href{https://www.ncbi.nlm.nih.gov/protein}{NCBI protein
@@ -313,55 +324,64 @@ using the query \texttt{<ORGANSIM> [ORGN] AND <INTERPRO\_CODE>}.
 The following protein families were selected from InterPro:
 \input{plots/protein_families.tex} 
 This yields only a subset of the desired genes, since not every
-protein in the database is annotated with all protein family codes and organism. It is
+protein in the database is annotated with all protein family codes and its organism. This method is,
 however, to the best of our knowledge, the fastest and most reliable way to
 download genes of a given protein family on InterPro --- for the scope of this
 work, we deem this sufficient.
 
 Next, the downloaded genes are preprocessed. Genes which contain letters 
-besides \texttt{ACGT} are removed. Then, they are being sorted into bins,
+besides \texttt{ACGT} are removed. Afterwards, they are being sorted into bins,
 depending on their length, the rationale thereof being that most multiple
 sequence alignmeners assume that the sequences are of similar length. Further,
-bins which have too few sequences in them are also being removed.
+bins consisting of too few sequences are being removed.
 
-Unfortunately, the PROTOMAT system originally used by Heinikoff is not to be
-found online any longer. 
-Thus, we create our own BLOCKS, which is definitely a major drawback of this work. 
+Unfortunately, the PROTOMAT \cite{henikoffAutomatedAssemblyProtein1991} found online any longer. 
+Thus, we create our own BLOCKS, which is definitely a major drawback and flaw of this work. 
 
 To do so, each bin is getting aligned by kalign \cite{lassmannKalignAccurateFast2005} with
-its default settings. There was no specific rationale in picking kalign - it is user friendly, fast and supposedly accurate enough. Aligning the bins results in a MSA for each bin.
+its default settings. There was no specific rationale in picking kalign - it is
+user friendly, fast and supposedly accurate enough. Aligning the bins results
+in a MSA for each bin.
 
 Thereafter, each MSA is looked at and gapless regions are selected. 
-These will be the BLOCKS for the computation of the BLOSUMx matrix.
-Subsequently, we compute the BLOSUM90 matrices of the created BLOCKS - note that $x$ was chosen somewhat arbitrarily,
-with the only reason that lower values would cluster too many sequences for narrower organism groups. Also note
+These will be the BLOCKS for the computation of the BLOSUMx.
+Subsequently, we compute the BLOSUM90s of the created BLOCKS - note that $x$
+was chosen somewhat arbitrarily, with the only reason that lower values would
+cluster too many sequences for narrower organism groups. Also note
 that we do not iteratively refine the BLOCKS as noted in Remark \ref{emref}
 as we were unable to find a multiple sequence aligner that allows an easy specification
 of the scoring matrix.
 \subsection*{Results \& Discussion}	
-	Multiple BLOSUM90 matrices for DNA have been derived, and the main takeaway is that the nBLOSUM90 matrices differ substantially from the +3/-2 matrix employed by BLAST. 	
+	Multiple BLOSUM90s for DNA have been derived, and the main takeaway is that the nBLOSUM90s differ substantially from the +3/-2 matrix employed by BLAST. 	
 	In the beginning, no filtering by organism has been undertaken, leading 
-	to what was essentially the identity matrix, i.e., rewarding matches with +1 and not penalizing mismatches. We suspect this behavior due to the vast diversity of organisms within each protein family - said diversity implies large evolutionary distance between sequences of BLOCKS, leading to what is essentially noise within the multiple sequence alignments. It would be nearly impossible to align full protein families.
+	to what was essentially the identity matrix, i.e., rewarding matches
+	with +1 and not penalizing mismatches. We suspect this behavior due to
+	the vast diversity of organisms within each protein family - said
+	diversity implies large evolutionary distance between sequences of
+	BLOCKS, leading to what is essentially noise within the multiple
+	sequence alignments. It would be nearly impossible to align full
+	protein families.
 	
-	Constructing the BLOSUM matrices for specific taxa, however, lead to
+	Constructing the BLOSUMs for specific taxa, however, lead to
 	more refined scoring matrices which show some interesting patterns.
 
-	First and foremost, the different mismatch scores were rarely uniform, indicating that a general mismatch score might be suboptimal for aligning sequences of known taxa. 
+	First and foremost, the different mismatch scores were rarely uniform, indicating that a general mismatch score might be suboptimal for aligning sequences of known taxa. 	Further, we noticed that match scores were typically similar, but not
+	equal. This might be attributable to noise in the data, as
+	often the diagonals were indeed repeating the same score. 
 
-	Further, we notice that match scores were typically similar, but not equal. This might, however, be attributable to noise in the data, as often, the diagonals were indeed repeating the same score. 
-
-	Another observation to be made is that, without any incentive, transitions
+	Another observation to be made is that, transitions
 	, i.e., mismatches of \texttt{A} $\iff$ \texttt{G} and \texttt{T}
 	$\iff$ \texttt{C}, ended up receiving a smaller penalty than
 	transversions, i.e., all other mismatches. There are models of
-	evolution making this assumption and papers supporting this claim, and
-	finding this within actual data is a supporting argument thereof.
+	evolution making this assumption \cite{kimuraEstimationEvolutionaryDistances1981}, which is called
+	the transition bias phenomenon, and
+	finding this within derived scoring matrices is a supporting argument thereof.
 
 	Further, another observation is that the more diverse the examined taxa,
 	the lower the resulting scores. As can be seen below,
-	the matrices of animals and bacteria have the lowest standard deviation and norm (indicating low values in the matrix) --- this does, however, not hold for plants, which are also largely diverse. Reasons for this lie in the data.
+	the matrices of animals and bacteria have the lowest standard deviation and norm (indicating low values in the matrix) --- this does, however, not hold for plants, which are also largely diverse. 
 	
-As a general theme, we would like to stress that the matter of large scale genetic data is very complex, and given the lack of a gold standard, our still reasonably small understanding of genetics, and the scope of this work, no real statements can be made.
+As a general theme, we would like to stress that the matter of large scale genetic data is very complex, and given the lack of a gold standard, our still reasonably small understanding of genetics, and the scope of this work, no substantial statements can or should be made.
 	\begin{table}[h] \label{desctable}
 		\include{plots/table.tex}
 		\caption{Descriptive statistics about the derived nBLOSUM90 matrices}
@@ -371,32 +391,38 @@ As a general theme, we would like to stress that the matter of large scale genet
 	\input{plots/matrices.tex}
 	\caption{The derived nBLOSUM90 matrices, per organism and protein family}
 	\end{table}
-
 \onecolumn
 \pagebreak
 
 \begin{figure}[!htp]
 		\centering
 		\includegraphics[width=\textwidth]{plots/downprojection.pdf}
-		\caption{Various nBLOSUM matrices derived from the specific protein families for different subsets of species, projected to two dimensions using PCA. The protein family is indicated by symbol and the species indicated by color.}
+		\caption{Various nBLOSUMs derived from the specific protein families for different subsets of species, projected to two dimensions using PCA. The protein family is indicated by symbol and the species indicated by color.}
 	\end{figure}
-Visually inspecting the downprojection of the BLOSUM matrices, we can also find
+
+Visually inspecting the downprojection of the BLOSUMs , we can also find
 hints for the fact that it is rather the species that should influence scoring
 matrices, rather than specific protein families. Note that the derived matrices
 for different protein families for a given taxa lie close together in the plot,
-whereas the matrices of some protein families spread rather far apart. 
+whereas the matrices of some protein families spread rather far apart. This can also be
+seen inspecting the tables themselves.
 
 \section*{Conclusion}
-We conclude with a few insights. First and foremost, that the most direly
-needed advance in the field might be a reproducible and generally agreed upon
-consensus of what makes a good alignment for DNA, and resulting benchmark
+We conclude with a few insights. First and foremost, that the most 
+needed advance in the field may be a reproducible and generally agreed upon
+consensus of what makes a good alignment for DNA, and a resulting benchmark
 dataset, which is, however, not facing to the public. Otherwise, we would
 probably overfit our methods to said benchmark dataset - a strategy for
-validating methods akin to the CASP challenges cite might be a great start.
+validating methods akin to the CASP challenges might be a great start.
 
 Further, whilst no quantitative superiority of derived scoring matrices for DNA
 has been established, observed differences between the currently employed matrix by BLASTn and the derived matrices (which do have some underlying theory as
-opposed to the empirically chosen match-/mismatch-scores as opposed to the BLASTn ones) give reason to further investigate data driven scoring matrices. Moreover, the online user interface of BLAST should allow for user defined scoring matrices for, first to raise awarness of the arbitrariness of the current options and secondly to allow for further development of new nucleotide substitution matrices.
+opposed to the empirically chosen match-/mismatch-scores used by BLASTn) give
+reason to further investigate data driven scoring matrices. Moreover, the
+online user interface of BLAST should allow for user defined scoring matrices
+for, first to raise awarness of the arbitrariness of the current options and
+secondly to allow for further development of new nucleotide substitution
+matrices.
 
 \pagebreak
 \printbibliography

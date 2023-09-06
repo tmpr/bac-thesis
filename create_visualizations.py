@@ -85,4 +85,6 @@ df = pd.concat(
     [pd.DataFrame(m, columns=nucs, index=nucs) for m in matrices],
     keys=zip(organisms, protein_families),
 )
+df = df.sort_index()
 df.to_latex("document/plots/matrices.tex", multirow=True)
+

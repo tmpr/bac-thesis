@@ -68,8 +68,8 @@ df = pd.DataFrame.from_records(
     ),
     columns=[
         "Organisms",
-        "Interpro code",
-        r"\# Sequences",
+        "Code",
+        r"\# Seq.",
         r"$\sigma^2(\mathbf S)$",
         r"$\lVert \mathbf S \rVert_2$",
     ],

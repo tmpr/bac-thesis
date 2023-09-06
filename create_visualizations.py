@@ -1,4 +1,5 @@
 from pathlib import Path
+from typing import List
 
 import numpy as np
 from numpy.typing import NDArray
@@ -88,3 +89,13 @@ df = pd.concat(
 df = df.sort_index()
 df.to_latex("document/plots/matrices.tex", multirow=True)
 
+
+def protein_family_list(protein_family_codes: List[str]) -> str:
+    lines = [r"\begin{itemize}"]
+    for protein_family_code in set(protein_family_codes):
+        db = "pfam" if protein_family_code.startswith("PF") else "interpro"
+        lines.append(f"\t \\item \\href{{https://www.ebi.ac.uk/interpro/entry/{db}/{protein_family_code}}}{{{protein_family_code}}}")
+    lines.append(r"\end{itemize}")
+    return "\n".join(lines)
+
+Path("document/plots/protein_families.tex").write_text(protein_family_list(protein_families))

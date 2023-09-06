@@ -50,9 +50,11 @@ fig = px.scatter(
     symbol=protein_families,
     size=sizes,
     size_max=15,
+    template='none'
 )
 fig.update_layout(
-    {"legend_title": "Organisms, Interpro code", "xaxis_title": "", "yaxis_title": ""}
+        {"legend_title": "Organisms, Interpro code", "xaxis_title": "",
+         "yaxis_title": ""}
 )
 fig.write_image("document/plots/downprojection.pdf")
 

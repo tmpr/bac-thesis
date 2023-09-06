@@ -176,7 +176,7 @@ if __name__ == "__main__":
     paths = list(Path("data/aligned/").glob(f"{args.protein_family_code}*"))
     blocks = []
     for path in paths:
-        blocks.extend(get_blocks(path, min_column_density=1, min_block_len=20))
+        blocks.extend(get_blocks(path, min_column_density=1, min_block_len=10))
 
     Path(f"blocks/{args.protein_family_code}").write_text(
         "\n\n".join("\n".join("".join(row) for row in block) for block in blocks)

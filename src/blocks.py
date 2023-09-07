@@ -9,8 +9,6 @@ from Bio import SeqIO
 import numpy as np
 from numpy.typing import NDArray
 
-msa_path = "/Users/temper/bac-hesis/data/IPR045863.fasta_1818"
-
 
 def load_msa(path: Path) -> NDArray[np.generic]:
     alignment = np.array(list(SeqIO.parse(path, format="fasta")))

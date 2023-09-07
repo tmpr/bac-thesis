@@ -49,7 +49,7 @@
 
 
 
-\section*{Introduction} Sequence alignment is the task of pairing up the
+\section{Introduction} Sequence alignment is the task of pairing up the
 elements of two (biological) sequences with the aim of finding conserved
 regions and homologous sequences anticipated to have some
 evolutionary relation. Sequence alignment algorithms are primarily used for
@@ -124,7 +124,7 @@ the focus of this work.
     \end{align}
 \end{example}
 
-\subsubsection*{BLOSUM}
+\subsubsection{BLOSUM}
 Famously, one family of scoring matrices are called BLOSUMs (\textbf{BLO}ck \textbf{SU}bstitution \textbf{M}atrices), first constructed by \textcite{henikoffAminoAcidSubstitution1992} for aligning amino acid sequences. A wonderful explanation thereof was written by
 \textcite{eddyWhereDidBLOSUM622004}. However, we shall briefly dive into the
 theoretical underpinnings of BLOSUMs here as well.
@@ -294,7 +294,7 @@ fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 	produced.
 \end{remark}
 
-\subsubsection*{Related work}
+\subsubsection{Related work}
 Most notably, the two families of classical scoring matrices are the PAM matrixes \cite{dayhoffModelEvolutionaryChange1978} and the BLOSUMs. 
 However, and this is also true for most other research around sequence alignment: there is a strong emphasis on studying the
 alignment of proteins over studying the alignment of DNA. To the best of our
@@ -317,8 +317,8 @@ strong assumptions. Thus, their findings are not as generalizable as they could 
 Morever, their method performs only slightly better than 2 manually created scoring matrices, which we deem to be insufficient evidence to support any substantial claims.
 
 
-\section*{Experiments and results}
-\subsection*{Method}
+\section{Experiments and results}
+\subsection{Method}
 We constructed a fully automated pipeline which takes as input an identification code of a protein
 family on InterPro and the similarity threshold $x$ and computes the
 corresponding nBLOSUMx (nucleotide BLOSUMx). The source code can be found online, yet, here we
@@ -357,7 +357,7 @@ cluster too many sequences for narrower organism groups. Also note
 that we do not iteratively refine the BLOCKS as noted in Remark \ref{emref}
 as we were unable to find a multiple sequence aligner that allows an easy specification
 of the scoring matrix.
-\subsection*{Results \& Discussion}	
+\subsection{Results \& Discussion}	
 	Multiple BLOSUM90s for DNA have been derived, and the main takeaway is that the nBLOSUM90s differ substantially from the +3/-2 matrix employed by BLAST. 	
 	In the beginning, no filtering by organism has been undertaken, leading 
 	to what was essentially the identity matrix, i.e., rewarding matches
@@ -418,7 +418,7 @@ for different protein families for a given taxa lie close together in the plot,
 whereas the matrices of some protein families spread rather far apart. This can also be
 seen inspecting the tables themselves.
 
-\section*{Conclusion}
+\section{Conclusion}
 We conclude with a few insights. First and foremost, that the most 
 needed advance in the field may be a reproducible and generally agreed upon
 consensus of what makes a good alignment for DNA, and a resulting benchmark

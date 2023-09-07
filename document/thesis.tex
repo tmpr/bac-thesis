@@ -28,6 +28,7 @@
 \title{Deriving BLOSUM-like matrices for protein-coding DNA}
 \geometry{a4paper, left=15mm, right=15mm, top=15mm, bottom=25mm}
 \addbibresource{substitution-matrices.bib}
+\addbibresource{software.bib}
 \bibliography{substitution-matrices}
 \twocolumn
 \author{Alexander Temper}
@@ -49,13 +50,13 @@
 
 \section*{Introduction} Sequence alignment is the task of pairing up the
 elements of two (biological) sequences with the aim of finding conserved
-regions and homologous sequencese anticipated to have some
+regions and homologous sequences anticipated to have some
 evolutionary relation. Sequence alignment algorithms are primarily used for
 constructing phylogenetic trees \cite{chatzouMultipleSequenceAlignment2016}, searching for homologous sequences with BLAST \cite{altschulBasicLocalAlignment1990},
 assembling full DNA strands from short reads, creating input features for
 machine learning algorithms like AlphaFold2 \cite{jumperHighlyAccurateProtein2021a} and others \cite{chatzouMultipleSequenceAlignment2016}
 
-Most alignment algorithms try to maximize a so called \emph{scoring function},
+Most alignment algorithms try to maximize a \emph{scoring function},
 which assigns to a given alignment some score. The classical methods score
 alignments by summing up scores assigned to each pair of letters in the given
 alignment. The scores for the pairs of letters can be represented by a
@@ -73,12 +74,13 @@ symmetric matrix --- we call such matrices "\emph{scoring matrices}".
 
         \item A \emph{sequence alignment} is a matrix $\mathbf A \in
                   (\mathcal{L} + \{\mathtt{-}\})^{n \times m}$, where $n$ is the number of aligned sequences and $m$ is the
-              length of the alignment.
+              length of the /lignment.
 	      An alignment with $n = 2$ is called a \emph{pairwise sequence alignment.}
       \item A \emph{scoring function} $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{n
                       \times m} \to \mathbb{R}$ maps an alignment to its score.
     \end{itemize}
 \end{definition}
+
 
 The classical algorithms for pairwise sequence alignment use a scoring function of the form
 $\sigma_s( \mathbf A )= \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s:
@@ -122,8 +124,8 @@ the focus of this work.
 \end{example}
 
 \subsubsection*{BLOSUM}
-Famously, one family of scoring matrices are the so called BLOSUMs (\textbf{BLO}ck \textbf{SU}bstitution \textbf{M}atrices), first constructed by \textcite{henikoffAminoAcidSubstitution1992} for aligning amino acid sequences. A wonderful explanation thereof was written by
-\textcite{eddyWhereDidBLOSUM622004}, however, we shall briefly dive into the
+Famously, one family of scoring matrices are called BLOSUMs (\textbf{BLO}ck \textbf{SU}bstitution \textbf{M}atrices), first constructed by \textcite{henikoffAminoAcidSubstitution1992} for aligning amino acid sequences. A wonderful explanation thereof was written by
+\textcite{eddyWhereDidBLOSUM622004}. However, we shall briefly dive into the
 theoretical underpinnings of BLOSUMs here as well.
 
 Underlying BLOSUMs is the equation that, given the two paired letters $a \in
@@ -228,7 +230,7 @@ Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the in
 An important piece of the algorithm is still missing - the clustering of sequences within BLOCKS.
 We will introduce this more informally: we pick a similarity threshold $x$, we
 then check within each  which sequences have $\ge x$\% identity and
-then 'average' the the sequences, transitively, i.e., if sequence $i$ and
+then 'average' the sequences, transitively, i.e., if sequence $i$ and
 sequence $j$ are to be clustered and sequence $j$ and sequence $k$ as well,
 then sequence $i$, sequence $j$ and sequence $k$ are being clustered together.
 The count matrix $\mathbf C$ now includes fractional counts, and the rest of the computation remains the same.
@@ -273,7 +275,7 @@ very assumed generality that has motivated this paper.
 \begin{remark}
 Interestingly enough, there have been
 mistakes in the original computation of the BLOSUMs, which are claimed
-to have been improving them quietly \cite{styczynskiBLOSUM62MiscalculationsImprove2008a}, however, might be attributed to the
+to have been improving them quietly \cite{styczynskiBLOSUM62MiscalculationsImprove2008a}, however, this might be attributed to the
 fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 
 \end{remark}
@@ -284,7 +286,11 @@ fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 	and BLOSUMs are produced by good alignments. Indeed, the BLOCKS database
 	itself is created with BLOSUMs, and the two iteratively create the other.
 
-	First, the BLOCKS database is created from a scoring matrix with 0 mismatch score and 1 match score. Then, the first BLOSUM is created, which is then used to produce new BLOCKS. This process is then done another 2 times until the actual BLOSUM and BLOCKS database have been produced.
+	First, the BLOCKS database is created from a scoring matrix with 0
+	mismatch score and 1 match score. Then, the first BLOSUM is created,
+	which is then used to produce new BLOCKS. This process is then repeated 
+ 	an additional two times until the actual BLOSUM and BLOCKS database have been
+	produced.
 \end{remark}
 
 \subsubsection*{Related work}
@@ -306,9 +312,8 @@ mutation, which is why general-purpose DNA scoring matrices might be a bad
 idea. Their main focus lies on recovering and mitigating the sequencing errors
 and projecting the differing GC contents of different species in the resulting
 matrix. They evaluate their data on simulated data, which consequentually makes
-strong assumptions, thus is not too optimal. Their method performs slightly
-better than 2 manually created scoring matrices, which we deem to be insufficient evidence
-to support any substantial claims.
+strong assumptions. Thus, their findings are not as generalizable as they could be.
+Morever, their method performs only slightly better than 2 manually created scoring matrices, which we deem to be insufficient evidence to support any substantial claims.
 
 
 \section*{Experiments and results}
@@ -340,8 +345,8 @@ Thus, we create our own BLOCKS, which is definitely a major drawback and flaw of
 
 To do so, each bin is getting aligned by kalign \cite{lassmannKalignAccurateFast2005} with
 its default settings. There was no specific rationale in picking kalign - it is
-user friendly, fast and supposedly accurate enough. Aligning the bins results
-in a MSA for each bin.
+user friendly, fast and reasonably accurate. Aligning the bins results
+in a multiple sequence alignment for each bin.
 
 Thereafter, each MSA is looked at and gapless regions are selected. 
 These will be the BLOCKS for the computation of the BLOSUMx.
@@ -397,7 +402,10 @@ As a general theme, we would like to stress that the matter of large scale genet
 \begin{figure}[!htp]
 		\centering
 		\includegraphics[width=\textwidth]{plots/downprojection.pdf}
-		\caption{Various nBLOSUMs derived from the specific protein families for different subsets of species, projected to two dimensions using PCA. The protein family is indicated by symbol and the species indicated by color.}
+		\caption{Various nBLOSUMs derived from the specific protein
+		families for different subsets of species, projected to two
+		dimensions using Principal Component Analysis  . The protein family is indicated by symbol and the
+species indicated by color.}
 	\end{figure}
 
 Visually inspecting the downprojection of the BLOSUMs , we can also find

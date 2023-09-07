@@ -5,6 +5,7 @@ channels:
   - plotly
 dependencies:
   - python=3.11
+  - pip=21.2.4
   - plotly=5.15
   - pandas=2.0.3
   - nbformat=5.7.0

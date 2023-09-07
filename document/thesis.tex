@@ -50,7 +50,7 @@
 \tableofcontents
 
 \section{Introduction} Sequence alignment is the task of pairing up the
-elements of two (biological) sequences with the aim of finding conserved
+elements of (biological) sequences with the aim of finding conserved
 regions and homologous sequences anticipated to have some
 evolutionary relation. Sequence alignment algorithms are primarily used for
 constructing phylogenetic trees \cite{chatzouMultipleSequenceAlignment2016}, searching for homologous sequences with BLAST \cite{altschulBasicLocalAlignment1990},
@@ -58,7 +58,8 @@ assembling full DNA strands from short reads, creating input features for
 machine learning algorithms like AlphaFold2 \cite{jumperHighlyAccurateProtein2021a} and others \cite{chatzouMultipleSequenceAlignment2016}
 
 Most alignment algorithms try to maximize a \emph{scoring function},
-which assigns to a given alignment some score. The classical methods score
+which assigns a measure of supposed quality to a given alignment.
+The classical methods score
 alignments by summing up scores assigned to each pair of letters in the given
 alignment. The scores for the pairs of letters can be represented by a
 symmetric matrix --- we call such matrices "\emph{scoring matrices}".
@@ -71,20 +72,22 @@ symmetric matrix --- we call such matrices "\emph{scoring matrices}".
         \item The letter '\texttt{-}' is called \emph{indel} and represents
               gaps in the alignment, which typically occur due to mutations or sequencing
               errors.
-      \item An alignment of two nuleotides $a, b$ is called a "\emph{match}" if $a = b$, a "\emph{mistmatch"} if $a \ne b$ and a "\emph {gap}" if $a =$ "\texttt{-}" or $b =$ "\texttt{-}",
 
-        \item A \emph{sequence alignment} is a matrix $\mathbf A \in
+        \item A (sequence) alignment is a matrix $\mathbf A \in
                   (\mathcal{L} + \{\mathtt{-}\})^{n \times m}$, where $n$ is the number of aligned sequences and $m$ is the
-              length of the /lignment.
+              length of the alignment.
 	      An alignment with $n = 2$ is called a \emph{pairwise sequence alignment.}
       \item A \emph{scoring function} $\sigma: (\mathcal{L} + \{\mathtt{-}\})^{n
                       \times m} \to \mathbb{R}$ maps an alignment to its score.
+      \item A pairing of two nuleotides $a, b$  in an alignment is called a "\emph{match}" if $a = b$, a "\emph{mismatch"} if $a \ne b$ and a "\emph {gap}" if $a =$ "\texttt{-}" or $b =$ "\texttt{-}".
     \end{itemize}
 \end{definition}
 
 
 The classical algorithms for pairwise sequence alignment use a scoring function of the form
-$\sigma_s( \mathbf A )= \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j})$, where $s:
+\begin{equation*}
+	\sigma_s( \mathbf A )= \sum_{j=0}^m s(\mathbf A_{1j}, \mathbf A_{2j}),
+\end{equation*} where $s:
     (\mathcal L + \{\mathtt{-}\})^2 \to \mathbb{R}$ is a symmetric function
 evaluating pairs of letters, which can be represented by a matrix $\mathbf S
     \in \mathbb Z^{(\# \mathcal L) + 1 \times (\# \mathcal L) + 1}$. Said matrix is
@@ -98,7 +101,7 @@ the focus of this work.
         \mathbf A = \begin{bmatrix}
             \mathtt{A} & \mathtt{C} & \mathtt{-} & \mathtt{A} \\
             \mathtt{A} & \mathtt{A} & \mathtt{G} & \mathtt{A}
-        \end{bmatrix}
+        \end{bmatrix}.
     \end{equation*}
     An exemplary scoring matrix is 
     \begin{equation*}
@@ -115,7 +118,7 @@ the focus of this work.
              & 0
             \\ \mathtt{-} & 0          & 0          & -4         & 0
              & 0 \\
-        \end{matrix}
+        \end{matrix}.
     \end{equation*}
     Using the above matrix, \begin{align}
 	    \sigma_{\mathbf S}(\mathbf A) &= s(\mathtt A, \mathtt A) + s(\mathtt C, \mathtt A) + s(\mathtt{-}, \mathtt{G}) + s(\mathtt{A}, \mathtt{A}) \\
@@ -129,29 +132,25 @@ Famously, one family of scoring matrices are called BLOSUMs (\textbf{BLO}ck \tex
 \textcite{eddyWhereDidBLOSUM622004}. However, we shall briefly dive into the
 theoretical underpinnings of BLOSUMs here as well.
 
-Underlying BLOSUMs is the equation that, given the two paired letters $a \in
-    \mathcal L, b \in \mathcal L$,
+Underlying BLOSUMs is the equation
 \begin{equation*}
-    s(a, b)= 2 \log_2 \frac{P(a, b)}{P(a)P(b)}.
+	s(a, b)= 2 \log_2 \frac{P(a, b)}{P(a)P(b)} \text{ where } a  \in \mathcal L, b \in \mathcal L.
 \end{equation*}
 
 We can understand this as follows: We want to derive a score we assign
 for aligning the two letters $a$ and $b$, $s(a,b)$. We can represent such
 a score by the odds of the probability of aligning $a, b$ being observed,
-$P(a, b)$, versus the probability of the two being paired due to chance, which is
-, in probablistic terms, $P(a \cup b) = P(a)P(b)$.
+$P(a, b)$, versus the probability of the two being paired due to chance. In probablistic terms this is $P(a \cup b) = P(a)P(b)$.
 
 Now, assuming we have a dataset with already aligned data we deem to be good, we
 can approximate $P(a, b)$ by counting how often $a$ and $b$ were aligned, and
-we can also approximate $P(a)*P(b)$ by counting how often both $a$ and $b$ appear
+we can also approximate $P(a)P(b)$ by counting how often both $a$ and $b$ appear
 individually and multiplying the resulting two counts together.
 
-The orgiginal BLOSUM used the BLOCKS database
-\cite{henikoffAutomatedAssemblyProtein1991}, which provided multiple sequence
-alignments (MSAs) without any gaps, called BLOCKS, from which $P(a, b)$ and $P(a)$ and $P(b)$
-were approximated. BLOCKS are conserved regions of multiple sequence alignments without
-gaps. Thus, the resulting scoring matrix does not include values for gaps. We now follow up with
-a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM .
+In this fashion, the orgiginal BLOSUM was constructed
+from the BLOCKS database \cite{henikoffAutomatedAssemblyProtein1991}, which provided gapless multiple sequence alignments (MSAs) called BLOCKS, frrom which $P(a,b)$ and $P(a)$ and $P(b)$ were approximated in a frequentist fashion. Given the absence of gaps, the re-
+sulting scoring matrix does not include scores for gaps. We
+now follow up with a somewhat precise definition of a simplified version of the algorithm to compute the BLOSUM.
 
 \begin{definition}
 A BLOCKS database $\mathbf Z$ is a sequence of MSAs of differing shapes, i.e., $\mathbf Z = (\mathbf A^k)_{k=1}^l$
@@ -188,9 +187,9 @@ be computed from $\mathbf Q$ via $\mathbf p_i = \mathbf Q_{i, i} + \sum_{j \ne i
 			4 & 2 & 0 & 0 \\
 			0 & 0 & 0 & 0 \\
 			0 & 0 & 0 & 0
-		\end{bmatrix}.
+		\end{bmatrix}
 	\end{equation*}
-	From the above, we get
+	thus
 	\begin{equation*}
 		\mathbf Q = \begin{bmatrix}
 			0.5 & 0.33 & 0 & 0 \\
@@ -225,13 +224,13 @@ Now the assumption is that, given that $i$ is the index of $a$ and $j$ is the in
 	this by making the function skew symmetric, i.e., $\frac a b 
 	\ne -\frac b a$ but $\log \frac a b = - \log \frac b a $.
 	
-	TODO: Why the times two?
+	To the best of our knowledge, there is no distinct reason why the number 2 is picked for the logarithm and the multiplier - we suspect this is due to its connection to information theory.
 \end{remark}
 
 An important piece of the algorithm is still missing - the clustering of sequences within BLOCKS.
 We will introduce this more informally: we pick a similarity threshold $x$, we
 then check within each  which sequences have $\ge x$\% identity and
-then 'average' the sequences, transitively, i.e., if sequence $i$ and
+then ``average'' the sequences transitively, i.e., if sequence $i$ and
 sequence $j$ are to be clustered and sequence $j$ and sequence $k$ as well,
 then sequence $i$, sequence $j$ and sequence $k$ are being clustered together.
 The count matrix $\mathbf C$ now includes fractional counts, and the rest of the computation remains the same.
@@ -268,17 +267,19 @@ of 90\% similarity are clustered.
 \end{example}
 This amounts to the basic machinery of the algorithm to compute BLOSUMs.
 
-This family of matrices has become a de-facto standard fo:qr aligning amino acid
+\begin{remark}
+	This family of matrices has become a de-facto standard for aligning amino acid
 sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
 matches are rewarded with +2 and mismatches are penalized with -3 \cite{altschulBasicLocalAlignment1990}
 very assumed generality that has motivated this paper.
+\end{remark}
 
 \begin{remark}
 Interestingly enough, there have been
 mistakes in the original computation of the BLOSUMs, which are claimed
-to have been improving them quietly \cite{styczynskiBLOSUM62MiscalculationsImprove2008a}, however, this might be attributed to the
-fact that the benchmarks today might be influenced from the BLOSUMs of the past.
-
+to have been improving them quietly
+\cite{styczynskiBLOSUM62MiscalculationsImprove2008a}. However, this might be
+attributed to the fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 \end{remark}
 
 \begin{remark}\label{emref}
@@ -313,16 +314,16 @@ mutation, which is why general-purpose DNA scoring matrices might be a bad
 idea. Their main focus lies on recovering and mitigating the sequencing errors
 and projecting the differing GC contents of different species in the resulting
 matrix. They evaluate their data on simulated data, which consequentually makes
-strong assumptions. Thus, their findings are not as generalizable as they could be.
-Morever, their method performs only slightly better than 2 manually created scoring matrices, which we deem to be insufficient evidence to support any substantial claims.
+strong assumptions. Thus, their findings are not  too applicable to real world data.
+Moreover, their method performs only slightly better than 2 manually created scoring matrices, which we deem to be insufficient evidence to support any substantial claims.
 
 
 \section{Experiments and results}
 \subsection{Method}
 We constructed a fully automated pipeline which takes as input an identification code of a protein
 family on InterPro and the similarity threshold $x$ and computes the
-corresponding nBLOSUMx (nucleotide BLOSUMx). The source code can be found online, yet, here we
-give some detail on the implementation and issues we faced.
+corresponding nBLOSUMx (nucleotide BLOSUMx). The source code can be found \href{https://github.com}{online}, yet, here we
+give some details on the implementation and issues we faced.
 
 First, we search the \href{https://www.ncbi.nlm.nih.gov/protein}{NCBI protein
 database} for the given identification code and given organism using eDirect
@@ -336,7 +337,7 @@ download genes of a given protein family on InterPro --- for the scope of this
 work, we deem this sufficient.
 
 Next, the downloaded genes are preprocessed. Genes which contain letters 
-besides \texttt{ACGT} are removed. Afterwards, they are being sorted into bins,
+besides \texttt{A, C, G, T} are removed. Afterwards, they are being sorted into bins,
 depending on their length, the rationale thereof being that most multiple
 sequence alignmeners assume that the sequences are of similar length. Further,
 bins consisting of too few sequences are being removed.
@@ -358,7 +359,8 @@ that we do not iteratively refine the BLOCKS as noted in Remark \ref{emref}
 as we were unable to find a multiple sequence aligner that allows an easy specification
 of the scoring matrix.
 \subsection{Results \& Discussion}	
-	Multiple BLOSUM90s for DNA have been derived, and the main takeaway is that the nBLOSUM90s differ substantially from the +3/-2 matrix employed by BLAST. 	
+	Multiple nBLOSUM90s have been derived, and the main takeaway is that the they differ substantially from the +2/-3 matrix employed by BLASTn. 	
+
 	In the beginning, no filtering by organism has been undertaken, leading 
 	to what was essentially the identity matrix, i.e., rewarding matches
 	with +1 and not penalizing mismatches. We suspect this behavior due to
@@ -375,8 +377,8 @@ of the scoring matrix.
 	equal. This might be attributable to noise in the data, as
 	often the diagonals were indeed repeating the same score. 
 
-	Another observation to be made is that, transitions
-	, i.e., mismatches of \texttt{A} $\iff$ \texttt{G} and \texttt{T}
+	Another observation to be made is that, transitions,
+	i.e., mismatches of \texttt{A} $\iff$ \texttt{G} and \texttt{T}
 	$\iff$ \texttt{C}, ended up receiving a smaller penalty than
 	transversions, i.e., all other mismatches. There are models of
 	evolution making this assumption \cite{kimuraEstimationEvolutionaryDistances1981}, which is called
@@ -422,9 +424,8 @@ seen inspecting the tables themselves.
 We conclude with a few insights. First and foremost, that the most 
 needed advance in the field may be a reproducible and generally agreed upon
 consensus of what makes a good alignment for DNA, and a resulting benchmark
-dataset, which is, however, not facing to the public. Otherwise, we would
-probably overfit our methods to said benchmark dataset - a strategy for
-validating methods akin to the CASP challenges might be a great start.
+dataset, which is, however, not facing to the public. Otherwise, researchers
+might overfit their methods to said benchmark datasets.
 
 Further, whilst no quantitative superiority of derived scoring matrices for DNA
 has been established, observed differences between the currently employed matrix by BLASTn and the derived matrices (which do have some underlying theory as

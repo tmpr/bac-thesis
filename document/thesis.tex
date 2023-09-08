@@ -41,7 +41,7 @@
     which can heavily influence their results. In this work, we try to derive
     scoring matrices for the deoxyribonucleic acid (DNA) of subsets of protein
     families for specific organisms akin to
-    the BLOSUMx matrices, which are derived for amino acid sequences.
+    the BLOSUMx, which are derived for amino acid sequences.
 
     Whilst the lack of proper benchmark data allows for no definitve quantitative
     statement about the performance of the derived matrices, we find that there is ample diversity among them to be further investigated.
@@ -241,7 +241,7 @@ then ``average'' the sequences transitively, i.e., if sequence $i$ and
 sequence $j$ are to be clustered and sequence $j$ and sequence $k$ as well,
 then sequence $i$, sequence $j$ and sequence $k$ are being clustered together.
 The count matrix $\mathbf C$ now includes fractional counts, and the rest of the computation remains the same.
-This is why the matrices are called BLOSUMx matrices --- a BLOSUM90 matrix is made from blocks where sequences 
+This is why the matrices are called BLOSUMx --- a BLOSUM90 matrix is made from blocks where sequences 
 of 90\% similarity are clustered.
 
 \begin{example}
@@ -417,7 +417,7 @@ is the standard deviation of all 16 scores per matrix and $\| \mathbf S\|_2$ is 
 
 	\begin{table}
 	\input{plots/matrices.tex}
-	\caption{The derived nBLOSUM90 matrices, per organism and protein family}
+	\caption{The derived nBLOSUM90s, per organism and protein family}
 	\end{table}
 \onecolumn
 \pagebreak

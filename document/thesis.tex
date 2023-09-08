@@ -281,6 +281,13 @@ matches are rewarded with +2 and mismatches are penalized with -3 \cite{altschul
 very assumed generality that has motivated this paper.
 \end{remark}
 
+\begin{remark} \label{aminoAcidSequencesShouldHaveSpecialBLOSUM}
+	Even for amino acid sequences, the reader might notice a certain bias 
+	within the original BLOSUMs --- they only consider ungapped regions
+	and are generalized to all domains. We thus recommend using a specialized
+	BLOSUM for a given domain.
+\end{remark}
+
 \begin{remark}
 Interestingly enough, there have been
 mistakes in the original computation of the BLOSUMs, which are claimed
@@ -450,7 +457,7 @@ reason to further investigate data driven scoring matrices.
 online user interface of BLAST should allow for user defined scoring matrices
 for, first to raise awarness of the arbitrariness of the current options and
 secondly to allow for further development of new nucleotide substitution
-matrices.
+matrices. We say this due to the findings of this work and \ref{aminoAcidSequencesShouldHaveSpecialBLOSUM}.
 
 \end{enumerate}
 

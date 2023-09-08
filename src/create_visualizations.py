@@ -2,12 +2,12 @@ from pathlib import Path
 from typing import List
 
 import numpy as np
-from numpy.typing import NDArray
-import plotly.express as px
-from sklearn.decomposition import PCA
 import pandas as pd
+import plotly.express as px
 import plotly.io as pio
 from numpy.linalg import norm
+from numpy.typing import NDArray
+from sklearn.decomposition import PCA
 
 # This is needed as otherwise, the plot ends up having a bug,
 # see https://github.com/plotly/plotly.py/issues/3469
@@ -51,11 +51,10 @@ fig = px.scatter(
     symbol=protein_families,
     size=sizes,
     size_max=15,
-    template='none'
+    template="none",
 )
 fig.update_layout(
-        {"legend_title": "Taxon, Interpro code", "xaxis_title": "",
-         "yaxis_title": ""}
+    {"legend_title": "Taxon, Interpro code", "xaxis_title": "", "yaxis_title": ""}
 )
 fig.write_image("document/plots/downprojection.pdf")
 
@@ -94,8 +93,13 @@ def protein_family_list(protein_family_codes: List[str]) -> str:
     lines = [r"\begin{itemize}"]
     for protein_family_code in set(protein_family_codes):
         db = "pfam" if protein_family_code.startswith("PF") else "interpro"
-        lines.append(f"\t \\item \\href{{https://www.ebi.ac.uk/interpro/entry/{db}/{protein_family_code}}}{{{protein_family_code}}}")
+        lines.append(
+            f"\t \\item \\href{{https://www.ebi.ac.uk/interpro/entry/{db}/{protein_family_code}}}{{{protein_family_code}}}"
+        )
     lines.append(r"\end{itemize}")
     return "\n".join(lines)
 
-Path("document/plots/protein_families.tex").write_text(protein_family_list(protein_families))
+
+Path("document/plots/protein_families.tex").write_text(
+    protein_family_list(protein_families)
+)

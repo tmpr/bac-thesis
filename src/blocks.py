@@ -1,12 +1,12 @@
 from __future__ import annotations
+
 from collections import Counter
 from itertools import pairwise
 from pathlib import Path
 from typing import List, Tuple
 
-
-from Bio import SeqIO
 import numpy as np
+from Bio import SeqIO
 from numpy.typing import NDArray
 
 

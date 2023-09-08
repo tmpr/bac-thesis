@@ -1,10 +1,8 @@
 from argparse import ArgumentParser
-
 from pathlib import Path
 from typing import Sequence
 
 import numpy as np
-import swalign
 from networkx import Graph, connected_components
 from numpy.typing import NDArray
 from tqdm import tqdm

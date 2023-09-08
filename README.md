@@ -1,11 +1,23 @@
 # Deriving BLOSUM-like scoring matrices for nucleotides
 
-To get this started, create the environment
+Install the following:
 
-```conda env create -f environment.yml```
+- [conda](https://docs.conda.io/projects/conda/en/latest/user-guide/install/index.html),
+- [kalign](https://github.com/timolassmann/kalign),
+- [eDirect](https://www.ncbi.nlm.nih.gov/books/NBK179288/),
+- [latex](https://www.latex-project.org/get/),
+- [latexmk](https://mg.readthedocs.io/latexmk.html).
 
-and install [kalign](https://github.com/timolassmann/kalign) and [edirect](https://www.ncbi.nlm.nih.gov/books/NBK179288/).
+Create the environment with
 
-To get a BLOSUM matrix for a protein family's genes, call 
-`bash src/main.bash <INTERPRO_CODE> <X>`, where `<INTERPRO_CODE>`
-is the code for the family (in the case of [this family](https://www.ebi.ac.uk/interpro/entry/pfam/PF13603/), it is `PF13603`) and `<X>` is the similarity threshold for clustering the sequences (for the BLOSUM62 matrix, that is 0.62)).
+```
+conda env create -f environment.yml
+conda activate nblosum
+```
+
+Afterwards, to reproduce the paper and its results run
+
+```bash src/main.bash```
+
+Note that the NCBI database is subject to changes, thus full reproducibility like this is not guaranteed.
+The pdf in the root level has been created with the data stored in `data.zip`.

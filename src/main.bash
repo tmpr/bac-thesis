@@ -4,7 +4,7 @@ mkdir data/accession data/raw data/preprocessed data/aligned document/plots
 
 
 for protein_family_interpro_code in "IPR011014" "IPR023584" "IPR002547"; do
-	for organism in "plants" "mammals" "insects" "reptiles" "animals"; do
+	for organism in "plants" "mammals" "insects" "reptiles" "animals" "bacteria"; do
 		raw_location="data/raw/${protein_family_interpro_code}_${organism}.fasta"
 		preprocessed_location="data/preprocessed/${protein_family_interpro_code}_${organism}.fasta"
 		aligned_location="data/aligned/${protein_family_interpro_code}_${organism}.fasta"

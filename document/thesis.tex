@@ -64,6 +64,13 @@ alignments by summing up scores assigned to each pair of letters in the given
 alignment. The scores for the pairs of letters can be represented by a
 symmetric matrix --- we call such matrices "\emph{scoring matrices}".
 
+Scoring matrices for amino acids have received significant attention and thus,
+there is guiding theory to their construction. However, 
+nucleotide sequences have been neglected. In practice, when doing database searches
+with BLASTn, the scoring matrices are picked through intuition somewhat arbitrarily
+--- this is the main motivation of this investigation, in which we derive BLOSUMs 
+for DNA. Let us introduce the problem semi-formally.
+
 \begin{definition}
     The following will be used throughout the paper:
     \begin{itemize}
@@ -268,7 +275,7 @@ of 90\% similarity are clustered.
 This amounts to the basic machinery of the algorithm to compute BLOSUMs.
 
 \begin{remark}
-	This family of matrices has become a de-facto standard for aligning amino acid
+	As mentioned in the introduction, this family of matrices has become a de-facto standard for aligning amino acid
 sequences - however, not so much for DNA. BLASTn, i.e., BLAST for nucleotide bases, currently uses a matrix where
 matches are rewarded with +2 and mismatches are penalized with -3 \cite{altschulBasicLocalAlignment1990}
 very assumed generality that has motivated this paper.
@@ -282,7 +289,7 @@ to have been improving them quietly
 attributed to the fact that the benchmarks today might be influenced from the BLOSUMs of the past.
 \end{remark}
 
-\begin{remark}\label{emref}
+\begin{remark} \label{emref}
 	The reader might notice that there is some form of circular reasoning going on around
 	the computation of the BLOSUMs - good alignments are produced by using BLOSUMs 
 	and BLOSUMs are produced by good alignments. Indeed, the BLOCKS database

@@ -5,6 +5,7 @@ data/
 matrices/
 document/*
 !document/thesis.tex
+!document/*.bib
 .DS_Store
 .vscode/
 blocks/

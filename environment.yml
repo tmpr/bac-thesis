@@ -1,4 +1,4 @@
-name: nblosumn
+name: nblosum
 channels:
   - conda-forge
   - anaconda

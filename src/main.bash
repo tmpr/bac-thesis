@@ -1,3 +1,7 @@
+mkdir data blocks matrices
+mkdir data/accession data/raw data/preprocessed data/aligned document/plots
+
+
 
 for protein_family_interpro_code in "IPR011014" "IPR023584" "IPR002547"; do
 	for organism in "plants" "mammals" "insects" "reptiles" "animals"; do

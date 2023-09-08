@@ -27,3 +27,4 @@ for protein_family_interpro_code in "IPR011014" "IPR023584" "IPR002547"; do
 	done
 done
 
+python src/create_visualizations.py

@@ -17,7 +17,9 @@ conda activate nblosum
 
 Afterwards, to reproduce the paper and its results run
 
-```bash src/main.bash```
+```
+bash src/main.bash
+```
 
 Note that the NCBI database is subject to changes, thus full reproducibility like this is not guaranteed.
 The pdf in the root level has been created with the data stored in `data.zip`.

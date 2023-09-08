@@ -25,18 +25,18 @@ def parse_sw_matrix(txt: str) -> NDArray[np.int16]:
 matrices = []
 paths = list(Path("matrices").glob("*.matrix"))
 paths = [path for path in paths if len(path.stem.split("_")) == 3]
-blosumxs, protein_families, organisms, n_sequencess = [], [], [], []
+blosumxs, protein_families, taxa, n_sequencess = [], [], [], []
 for path in paths:
     if "nan" not in path.read_text():
         txt = path.read_text()
         matrix = parse_sw_matrix(txt)
         matrices.append(matrix)
-        blosumx, protein_family, organism = path.stem.split("_")
+        blosumx, protein_family, taxon = path.stem.split("_")
         blosumxs.append(blosumx)
         protein_families.append(protein_family)
-        organisms.append(organism)
+        taxa.append(taxon)
         n_sequences = (
-            Path(f"data/raw/{protein_family}_{organism}.fasta").read_text().count(">")
+            Path(f"data/raw/{protein_family}_{taxon}.fasta").read_text().count(">")
         )
         n_sequencess.append(n_sequences)
 
@@ -47,14 +47,14 @@ sizes = [15 for _ in vectors]
 fig = px.scatter(
     x=downprojected[:, 0],
     y=downprojected[:, 1],
-    color=organisms,
+    color=taxa,
     symbol=protein_families,
     size=sizes,
     size_max=15,
     template='none'
 )
 fig.update_layout(
-        {"legend_title": "Organisms, Interpro code", "xaxis_title": "",
+        {"legend_title": "Taxon, Interpro code", "xaxis_title": "",
          "yaxis_title": ""}
 )
 fig.write_image("document/plots/downprojection.pdf")
@@ -62,7 +62,7 @@ fig.write_image("document/plots/downprojection.pdf")
 df = pd.DataFrame.from_records(
     list(
         zip(
-            organisms,
+            taxa,
             protein_families,
             n_sequencess,
             norm(vectors, axis=1),
@@ -70,7 +70,7 @@ df = pd.DataFrame.from_records(
         )
     ),
     columns=[
-        "Organisms",
+        "Taxon",
         "Code",
         r"\# Seq.",
         r"$\sigma^2(\mathbf S)$",
@@ -84,7 +84,7 @@ df.to_latex("document/plots/table.tex", index=False, escape=False)
 nucs = list("ACGT")
 df = pd.concat(
     [pd.DataFrame(m, columns=nucs, index=nucs) for m in matrices],
-    keys=zip(organisms, protein_families),
+    keys=zip(taxa, protein_families),
 )
 df = df.sort_index()
 df.to_latex("document/plots/matrices.tex", multirow=True)

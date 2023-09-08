@@ -40,7 +40,7 @@
     Sequence Alignment algorithms rely on some form of scoring matrix,
     which can heavily influence their results. In this work, we try to derive
     scoring matrices for the deoxyribonucleic acid (DNA) of subsets of protein
-    families for specific organisms akin to
+    families for specific taxa akin to
     the BLOSUMx, which are derived for amino acid sequences.
 
     Whilst the lack of proper benchmark data allows for no definitve quantitative
@@ -340,12 +340,12 @@ corresponding nBLOSUMx (nucleotide BLOSUMx). The source code can be found \href{
 give some details on the implementation and issues we faced.
 
 First, we search the \href{https://www.ncbi.nlm.nih.gov/protein}{NCBI protein
-database} for the given identification code and given organism using eDirect
-using the query \texttt{<ORGANSIM> [ORGN] AND <INTERPRO\_CODE>}.
+database} for the given identification code and given taxon using eDirect
+using the query \texttt{<TAXON> [ORGN] AND <INTERPRO\_CODE>}.
 The following protein families were selected from InterPro:
 \input{plots/protein_families.tex} 
 This yields only a subset of the desired genes, since not every
-protein in the database is annotated with all protein family codes and its organism. This method is,
+protein in the database is annotated with all protein family codes and its taxa. This method is,
 however, to the best of our knowledge, the fastest and most reliable way to
 download genes of a given protein family on InterPro --- for the scope of this
 work, we deem this sufficient.
@@ -368,14 +368,14 @@ Thereafter, each MSA is looked at and gapless regions are selected.
 These will be the BLOCKS for the computation of the BLOSUMx.
 Subsequently, we compute the BLOSUM90s of the created BLOCKS - note that $x$
 was chosen somewhat arbitrarily, with the only reason that lower values would
-cluster too many sequences for narrower organism groups. Also note
+cluster too many sequences for narrower taxa. Also note
 that we do not iteratively refine the BLOCKS as noted in Remark \ref{emref}
 as we were unable to find a multiple sequence aligner that allows an easy specification
 of the scoring matrix.
 \subsection{Results \& Discussion}	
 	Multiple nBLOSUM90s have been derived, and the main takeaway is that the they differ substantially from the +2/-3 matrix employed by BLASTn. 	
 
-	In the beginning, no filtering by organism has been undertaken, leading 
+	In the beginning, no filtering by taxa has been undertaken, leading 
 	to what was essentially the identity matrix, i.e., rewarding matches
 	with +1 and not penalizing mismatches. We suspect this behavior due to
 	the vast diversity of organisms within each protein family - said
@@ -417,7 +417,7 @@ is the standard deviation of all 16 scores per matrix and $\| \mathbf S\|_2$ is 
 
 	\begin{table}
 	\input{plots/matrices.tex}
-	\caption{The derived nBLOSUM90s, per organism and protein family}
+	\caption{The derived nBLOSUM90s, per taxon and protein family}
 	\end{table}
 \onecolumn
 \pagebreak

@@ -7,11 +7,11 @@ JoinIntoGroupsOf() {
 }
 
 protein_family_interpro_code=$1
-organism=$2
-accession_file_name="data/accession/${protein_family_interpro_code}_${organism}"
-raw_file_name="data/raw/${protein_family_interpro_code}_${organism}.fasta"
-echo "${organism} [ORGN] AND ${protein_family_interpro_code}"
-esearch -db protein -query "${organism} [ORGN] AND ${protein_family_interpro_code}" | esummary | xtract -pattern DocumentSummary -element AccessionVersion \
+taxon=$2
+accession_file_name="data/accession/${protein_family_interpro_code}_${taxon}"
+raw_file_name="data/raw/${protein_family_interpro_code}_${taxon}.fasta"
+echo "${taxon} [ORGN] AND ${protein_family_interpro_code}"
+esearch -db protein -query "${taxon} [ORGN] AND ${protein_family_interpro_code}" | esummary | xtract -pattern DocumentSummary -element AccessionVersion \
     >$accession_file_name
 
 cat $accession_file_name | JoinIntoGroupsOf 5000 | xargs -n 1 sh -c \
